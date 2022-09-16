@@ -22,6 +22,7 @@ function Parts({
 }) {
   const [members, setMembers] = useState([]);
   const [date, setDate] = useState("");
+  const acToken = sessionStorage.getItem("accesstoken");
 
   const baseUrl = `/api/v1/parts/${cultureId}/${partId}/`;
 
@@ -38,7 +39,11 @@ function Parts({
   async function getMembers() {
     //모집현황
     await axios
-      .get(baseUrl + "member")
+      .get(baseUrl + "member", {
+        headers: {
+          Authorization: `Bearer ${acToken}`,
+        },
+      })
       .then((response) => {
         if (
           response.data.result !== "undefined" &&
@@ -56,7 +61,11 @@ function Parts({
   async function joinParts() {
     //참여하기
     await axios
-      .post(baseUrl + "join")
+      .post(baseUrl + "join", {
+        headers: {
+          Authorization: `Bearer ${acToken}`,
+        },
+      })
       .then((response) => {
         if (
           response.data.result !== "undefined" &&
@@ -73,7 +82,11 @@ function Parts({
   async function closeParts() {
     //마감하기
     await axios
-      .patch(baseUrl + "close")
+      .patch(baseUrl + "close", {
+        headers: {
+          Authorization: `Bearer ${acToken}`,
+        },
+      })
       .then((response) => {
         if (
           response.data.result !== "undefined" &&
@@ -90,7 +103,11 @@ function Parts({
   async function leaveParts() {
     //나가기
     await axios
-      .delete(baseUrl + "leave")
+      .delete(baseUrl + "leave", {
+        headers: {
+          Authorization: `Bearer ${acToken}`,
+        },
+      })
       .then((response) => {
         if (
           response.data.result !== "undefined" &&
@@ -108,7 +125,11 @@ function Parts({
   //삭제하기
   async function deleteParts() {
     await axios
-      .delete(baseUrl)
+      .delete(baseUrl, {
+        headers: {
+          Authorization: `Bearer ${acToken}`,
+        },
+      })
       .then((response) => {
         if (
           response.data.result !== "undefined" &&

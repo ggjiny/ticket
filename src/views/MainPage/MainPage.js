@@ -9,6 +9,9 @@ import "react-multi-carousel/lib/styles.css";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import { ButtonGroup } from "@mui/material";
+import "../LoginPage/setAuth";
+
+const acToken = sessionStorage.getItem("accesstoken");
 
 const responsive = {
   superLargeDesktop: {
@@ -43,9 +46,14 @@ const MainPage = () => {
     getInfo();
   }, []);
 
+  // axios.defaults.headers.common["Authorization"] = `Bearer ${acToken}`;
   async function getInfo() {
     await axios
-      .get(infoUrl)
+      .get(infoUrl, {
+        headers: {
+          Authorization: `Bearer ${acToken}`,
+        },
+      })
       .then((response) => {
         if (
           response.data.result !== "undefined" &&
@@ -64,7 +72,11 @@ const MainPage = () => {
 
   async function getReservation() {
     await axios
-      .get(baseUrl)
+      .get(baseUrl, {
+        headers: {
+          Authorization: `Bearer ${acToken}`,
+        },
+      })
       .then((response) => {
         if (
           response.data.result !== "undefined" &&
@@ -83,7 +95,11 @@ const MainPage = () => {
 
   async function getCulture() {
     await axios
-      .get(baseUrl2)
+      .get(baseUrl2, {
+        headers: {
+          Authorization: `Bearer ${acToken}`,
+        },
+      })
       .then((response) => {
         if (
           response.data.result !== "undefined" &&

@@ -3,10 +3,10 @@ import "./Components/PartsRecruit";
 import "./PartsList.css";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import PotRecruit from "./Components/PartsRecruit";
+
 const acToken = sessionStorage.getItem("accesstoken");
 
-function PartsList(props) {
+function MyPartsList(props) {
   const { cultureId, imgUrl, name, open, close, header } = props;
   const [modalOpen, setModalOpen] = useState(false);
   const [parts, setParts] = useState([]);
@@ -15,16 +15,14 @@ function PartsList(props) {
     setModalOpen(!modalOpen);
   };
 
-  const partsUrl = "/api/v1/parts/" + cultureId;
+  const partsUrl = "/api/v1/parts/";
 
   //팟 가져오기
   useEffect(() => {
-    if (cultureId) {
-      getParts();
-    }
+    getMyParts();
   }, [open]);
 
-  async function getParts() {
+  async function getMyParts() {
     await axios
       .get(partsUrl, {
         headers: {
@@ -37,6 +35,7 @@ function PartsList(props) {
           response.data.result !== null
         )
           setParts(response.data.result);
+        console.log(response.data.result);
       })
       .catch((error) => {
         console.log(error.response.data.errorMessage);
@@ -71,7 +70,7 @@ function PartsList(props) {
                         currentPartTotal={part.currentPartTotal}
                         status={part.status}
                         role={part.role}
-                        getParts={getParts}
+                        getParts={getMyParts}
                       />
                     </div>
                   ))}
@@ -81,31 +80,11 @@ function PartsList(props) {
                   <h2>팟이 존재하지 않습니다.</h2>
                 </div>
               )}
-              <button id="parts_generate" onClick={handleModal}>
-                팟 새로 생성
-              </button>
             </div>
-
-            <PotRecruit
-              cultureId={cultureId}
-              imgUrl={imgUrl}
-              name={name}
-              open={modalOpen}
-              close={handleModal}
-              header="팟 모집"
-              getParts={getParts}
-            >
-              여기에 글을 써봐용
-            </PotRecruit>
           </main>
-          {/* <footer>
-            <button className="close" onClick={close}>
-              close
-            </button>
-          </footer> */}
         </section>
       ) : null}
     </div>
   );
 }
-export default PartsList;
+export default MyPartsList;

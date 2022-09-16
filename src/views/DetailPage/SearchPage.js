@@ -10,6 +10,7 @@ import { useRef } from "react";
 import { DatabaseOutlined } from "@ant-design/icons";
 
 const { Meta } = Card;
+const acToken = sessionStorage.getItem("accesstoken");
 
 const SearchPage = () => {
   const { inputValue } = useParams();
@@ -21,7 +22,11 @@ const SearchPage = () => {
 
   const fetchCultures = async () => {
     await axios
-      .get(`/api/v1/culture/search?query=${inputValue}&page=${page}`)
+      .get(`/api/v1/culture/search?query=${inputValue}&page=${page}`, {
+        headers: {
+          Authorization: `Bearer ${acToken}`,
+        },
+      })
       .then((res) => {
         //setCultures([...cultures, res.data.result.cultures]);
         setCultures(res.data.result.cultures);

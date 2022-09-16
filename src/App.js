@@ -14,7 +14,6 @@ import ReviewRegister from "./views/ReviewPage/ReviewRegister";
 import "antd/dist/antd.css";
 import "./App.css";
 import Calendar from "./views/MyPage/Calendar";
-import Score from "./views/ReviewPage/starRate";
 import MyPage from "./views/MyPage/MyPage";
 import SearchPage from "./views/DetailPage/SearchPage";
 import Kakao from "./views/LoginPage/Kakao";
@@ -40,7 +39,6 @@ function App() {
           <Route path="/parts" element={<PartsHome />} />
           <Route path="/review/register" element={<ReviewRegister />} />
           <Route path="/calendar" element={<Calendar />} />
-          <Route path="/score" element={<Score />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/search/:inputValue" element={<SearchPage />} />
           <Route path="/oauth/redirect" element={<Kakao />} />

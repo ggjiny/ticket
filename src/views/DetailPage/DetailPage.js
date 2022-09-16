@@ -6,6 +6,7 @@ import { Button, Card } from "antd";
 import Header from "../Header/Header";
 import PartsList from "../PartsPage/PartsList";
 import moment from "moment";
+const acToken = sessionStorage.getItem("accesstoken");
 
 const DetailPage = () => {
   const { showId } = useParams();
@@ -52,7 +53,11 @@ const DetailPage = () => {
 
   async function getDetail() {
     await axios
-      .get(baseUrl)
+      .get(baseUrl, {
+        headers: {
+          Authorization: `Bearer ${acToken}`,
+        },
+      })
       .then((response) => {
         if (
           response.data.result !== "undefined" &&
@@ -105,7 +110,7 @@ const DetailPage = () => {
         name={data.name}
         open={modalOpen2}
         close={handleModal2}
-        header="Pot 목록"
+        header="팟 목록"
       >
         팟목록입니당
       </PartsList>

@@ -7,6 +7,7 @@ import interactionPlugin from "@fullcalendar/interaction"; // needed
 import axios from "axios";
 import useDidMountEffect from "./useDidMountEffect";
 import moment from "moment";
+const acToken = sessionStorage.getItem("accesstoken");
 
 function Calendar() {
   const [date, setDate] = useState({
@@ -53,11 +54,11 @@ function Calendar() {
 
   async function add_file() {
     await axios
-      .post(
-        baseUrl2,
-        formData
-        //{ headers: { "Content-Type": "multipart/form-data" } }
-      )
+      .post(baseUrl2, formData, {
+        headers: {
+          Authorization: `Bearer ${acToken}`,
+        },
+      })
       .then((response) => {
         if (
           response.data.result !== "undefined" &&
@@ -101,7 +102,11 @@ function Calendar() {
 
   async function calendar() {
     await axios
-      .get(baseUrl)
+      .get(baseUrl, {
+        headers: {
+          Authorization: `Bearer ${acToken}`,
+        },
+      })
       .then((response) => {
         if (
           response.data.result !== "undefined" &&

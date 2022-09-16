@@ -6,6 +6,8 @@ import "./ReviewRegister.css";
 import axios from "axios";
 
 function ReviewRegister() {
+  const acToken = sessionStorage.getItem("accesstoken");
+
   const [value, setValue] = useState({
     starPoint: 5.0,
     contents: "",
@@ -25,7 +27,11 @@ function ReviewRegister() {
 
   async function postReview() {
     await axios
-      .post(baseUrl, value)
+      .post(baseUrl, value, {
+        headers: {
+          Authorization: `Bearer ${acToken}`,
+        },
+      })
       .then((response) => {
         if (
           response.data.result !== "undefined" &&
@@ -140,7 +146,7 @@ function ReviewRegister() {
               />
             </li>
 
-            <button type="submit">업로드</button>
+            <button type="submit">등록하기</button>
           </form>
         </ul>
       </div>

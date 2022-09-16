@@ -7,6 +7,8 @@ import axios from "axios";
 import useDidMountEffect from "./useDidMountEffect";
 
 function Home() {
+  const acToken = sessionStorage.getItem("accesstoken");
+
   const [data, setData] = useState([]);
   const [disabled, setDisabled] = useState(false);
   const [reviews, setReviews] = useState([]);
@@ -45,7 +47,11 @@ function Home() {
 
   async function getReview() {
     await axios
-      .get(searchUrl)
+      .get(searchUrl, {
+        headers: {
+          Authorization: `Bearer ${acToken}`,
+        },
+      })
       .then((response) => {
         if (
           response.data.result !== "undefined" &&
@@ -155,13 +161,14 @@ function Home() {
           </form>
         </ul>
       </div>
-      {reviews ? (
+      {reviews.length > 0 ? (
         <div>
           {reviews.map((item) => (
             <div key={item.reviewId}>
               <Review
                 hallId={item.hallId}
                 memberId={item.memberId}
+                imgUrl={item.imgUrl}
                 name={item.name}
                 contents={item.contents}
                 floor={item.floor}
@@ -181,11 +188,11 @@ function Home() {
           ))}
         </div>
       ) : (
-        // <h1>검색 결과가 없습니다.</h1>
-        console.log("djqtek")
+        <div style={{ margin: "0 auto", width: "fit-content" }}>
+          <h1>등록된 리뷰가 없습니다.</h1>
+        </div>
       )}
-      {/* <Review rev={review[0]} /> */}
-      {/* <Link to="./register"></Link> */}
+
       <Link
         to={`./register`}
         state={{

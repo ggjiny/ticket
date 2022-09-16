@@ -7,6 +7,8 @@ import axios from "axios";
 import useDidMountEffect from "./useDidMountEffect";
 
 function MyReview() {
+  const acToken = sessionStorage.getItem("accesstoken");
+
   const [reviews, setReviews] = useState([]);
   let hallId = "";
 
@@ -21,7 +23,11 @@ function MyReview() {
 
   async function getMyReview() {
     await axios
-      .get(myUrl)
+      .get(myUrl, {
+        headers: {
+          Authorization: `Bearer ${acToken}`,
+        },
+      })
       .then((response) => {
         if (
           response.data.result !== "undefined" &&
@@ -39,7 +45,11 @@ function MyReview() {
 
   async function deleteReview() {
     await axios
-      .delete(deleteUrl)
+      .delete(deleteUrl, {
+        headers: {
+          Authorization: `Bearer ${acToken}`,
+        },
+      })
       .then((response) => {
         if (
           response.data.result !== "undefined" &&
@@ -64,13 +74,14 @@ function MyReview() {
   };
   return (
     <div>
-      {reviews ? (
+      {reviews.length > 0 ? (
         <div>
           {reviews.map((review) => (
-            <div key={review.key}>
+            <div key={review.reviewId}>
               <Review
                 hallName={review.hallName}
                 memberId={review.memberId}
+                imgUrl={review.imgUrl}
                 name={review.name}
                 contents={review.contents}
                 floor={review.floor}
@@ -92,8 +103,9 @@ function MyReview() {
           ))}
         </div>
       ) : (
-        // <h1>검색 결과가 없습니다.</h1>
-        console.log("djqtek")
+        <div style={{ margin: "0 auto", width: "fit-content" }}>
+          <h1>등록된 리뷰가 없습니다.</h1>
+        </div>
       )}
     </div>
   );

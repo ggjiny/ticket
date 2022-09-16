@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 function PotRecruit(props) {
+  const acToken = sessionStorage.getItem("accesstoken");
+
   const [value, setValue] = useState({
     partName: "",
     partContent: "",
@@ -16,7 +18,11 @@ function PotRecruit(props) {
 
   async function postParts() {
     await axios
-      .post(partRUrl, value)
+      .post(partRUrl, value, {
+        headers: {
+          Authorization: `Bearer ${acToken}`,
+        },
+      })
       .then((response) => {
         if (
           response.data.result !== "undefined" &&
