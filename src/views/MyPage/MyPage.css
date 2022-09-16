@@ -1,0 +1,49 @@
+.container {
+  box-sizing: border-box;
+  margin-top: 80px;
+  margin-left: 200px;
+}
+.left_box {
+  width: 385px;
+  text-align: center;
+}
+.info {
+  border: 1px solid #eee;
+  border-radius: 20px;
+  background-color: #f5f5f5;
+  margin-bottom: 20px;
+  padding: 20px;
+  height: 300px;
+}
+.count_watch {
+  border: 1px solid #eee;
+  border-radius: 20px;
+  background-color: #f5f5f5;
+  height: 100px;
+  display: flex;
+  font-size: 20px;
+  padding: 20px;
+}
+.keywords {
+  border: 1px solid #eee;
+  border-radius: 20px;
+  background-color: #f5f5f5;
+  height: 80px;
+  display: flex;
+  font-size: 20px;
+  padding: 20px;
+  margin-top: 50px;
+  margin-bottom: 30px;
+}
+
+.buttons button {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 10px;
+  margin-right: 5px;
+  padding: 6px;
+  border: 1px solid #eee;
+  box-shadow: 1px 1px 1px 1px #ccc;
+  cursor: pointer;
+}

@@ -1,0 +1,55 @@
+.concertHall {
+  background: #f5f5f5;
+  border: solid 0.5px #ccc;
+  border-radius: 40px;
+  box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  width: 800px;
+  height: 100px;
+  /* height: fit-content; */
+  margin: -12px auto;
+  font-size: 30px;
+  font-weight: 600;
+  padding-top: 25px;
+}
+.find-seat {
+  margin: 35px auto;
+  text-align: center;
+  font-size: 20px;
+}
+.find-seat ul li {
+  list-style-type: none;
+  /* float: left; */
+  display: inline;
+  margin-left: 20px;
+}
+.find-seat label {
+  margin-left: 8px;
+}
+#reviewRegister {
+  border: 1px solid #999;
+  width: 200px;
+  display: block;
+  font-size: 23px;
+  letter-spacing: 1px;
+  margin: 30px auto;
+
+  padding: 8px 10px;
+  border-radius: 30px;
+  background-color: #40598b;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+.find-seat input {
+  width: 60px;
+  text-align: right;
+  border: 1px solid #999;
+}
+
+.reviewED {
+  position: absolute;
+  right: 450px;
+  margin-top: -40px;
+  font-size: 15px;
+}

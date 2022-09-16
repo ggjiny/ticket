@@ -1,0 +1,52 @@
+.register {
+  width: 900px;
+  /* position: absolute; */
+  text-align: center;
+  margin: 30px auto;
+
+  /* top: 55%;
+  left: 50%;
+  margin-left: 30px;
+  transform: translate(-50%, -50%); */
+  /* padding: 30px; */
+  /*line-height: 150%;*/
+  font-size: 22px;
+}
+.register ul li {
+  line-height: 35px;
+  list-style: none;
+  padding: 10px 10px;
+  margin-bottom: 15px;
+  text-align: left;
+}
+.register a {
+  float: left; /* 왼쪽으로 배치 */
+  font-size: 22px; /* 글자 크기 - 13px */
+  width: 110px; /* 너비 - 110px */
+  color: black;
+}
+.register label {
+  padding-left: 5px;
+  padding-right: 25px;
+}
+.register button {
+  border: 1px solid #999;
+  width: 230px;
+  display: block;
+  font-size: 23px;
+  letter-spacing: 1px;
+  margin: 30px auto;
+  padding: 7px 10px;
+  border-radius: 20px;
+  background-color: #aaa;
+  color: white;
+  font-weight: bold;
+  /* padding: -30px; */
+  cursor: pointer;
+}
+
+.find input {
+  width: 100px;
+  text-align: right;
+  border: 1px solid #999;
+}

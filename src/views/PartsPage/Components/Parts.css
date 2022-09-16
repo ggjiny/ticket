@@ -1,0 +1,79 @@
+.parts {
+  /* border: 1px solid ; */
+  padding: 10px;
+  margin-bottom: 20px;
+  background: #f5f5f5;
+  border: solid 1px #ccc;
+  border-radius: 20px;
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.25);
+  /* height: 200px; */
+  height: fit-content;
+}
+.p_contents {
+  width: 265px;
+  text-align: left;
+  margin-top: 7px;
+  margin-left: 10px;
+  margin-bottom: 40px;
+  font-size: 14px;
+}
+#description {
+  margin-top: -15px;
+}
+.p_explain {
+  width: 320px;
+  height: 50px;
+  font-size: 14px;
+  text-align: left;
+  line-height: 20px;
+  margin-top: -50px;
+  margin-left: 10px;
+  color: #767677;
+  word-break: keep-all;
+}
+#concertName {
+  margin-bottom: 5px;
+}
+.parts button {
+  font-size: 15px;
+  font-weight: 600;
+  width: 90px;
+  position: relative;
+  left: 110px;
+  top: -10px;
+  background-color: #999;
+  color: aliceblue;
+  padding: 11px;
+  border-radius: 20px;
+}
+#status {
+  width: fit-content;
+  font-size: 16px;
+  position: relative;
+  top: -95px;
+
+  left: 240px;
+  border: 0;
+  border-radius: 0;
+}
+.parts button {
+  margin-right: 3px;
+  box-shadow: 1px 1px 1px 1px #ccc;
+}
+#chatroom {
+  background-color: #f8bb46;
+}
+
+#endparts {
+  background-color: #d37e7e;
+}
+#leaveparts {
+  /* background-color: #AFB5BB; */
+  background-color: #889aab;
+}
+#deleteparts {
+  background-color: #dc5454;
+}
+#together {
+  background-color: #97aeff;
+}
