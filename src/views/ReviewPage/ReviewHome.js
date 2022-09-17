@@ -1,13 +1,15 @@
 import Review from "./Review";
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./ReviewHome.css";
 import Header from "../Header/Header";
 import axios from "axios";
 import useDidMountEffect from "./useDidMountEffect";
+import Footer from "../Footer/Footer";
 
 function Home() {
   const acToken = sessionStorage.getItem("accesstoken");
+  const navigate = useNavigate();
 
   const [data, setData] = useState([]);
   const [disabled, setDisabled] = useState(false);
@@ -17,13 +19,41 @@ function Home() {
   const hallId = location.state.hallId;
   console.log(hallId);
 
+  const baseUrl = "/api/v1/member";
+
+  async function getInfo() {
+    //사용자 정보 받아오기
+    await axios
+      .get(baseUrl, {
+        headers: {
+          Authorization: `Bearer ${acToken}`,
+        },
+      })
+      .then((response) => {
+        if (
+          response.data.result !== "undefined" &&
+          response.data.result !== null
+        ) {
+          console.log(response.data.result);
+          setData(response.data.result);
+        }
+        //console.log("success!");
+      })
+      .catch((error) => {
+        alert("입력이 잘못 되었습니다.");
+        console.log(error);
+      }); //실패했을 때
+  }
+  useEffect(() => {
+    getInfo();
+  }, []);
+
   const [search, setSearch] = useState({
     floor: "",
     part: "",
     record: "",
     number: "",
   });
-  //const [toggle, setToggle] = useState(false);
 
   const { floor, part, record, number } = search;
   const searchUrl =
@@ -58,7 +88,7 @@ function Home() {
           response.data.result !== null
         )
           setReviews(response.data.result);
-        console.log(reviews);
+        console.log(response.data.result);
       })
       .catch((error) => {
         console.log(error.response.data.errorMessage);
@@ -177,13 +207,16 @@ function Home() {
                 number={item.number}
                 starPoint={item.starPoint}
                 reviewId={item.reviewId}
+                createdAt={item.createdAt}
               />
-              <div className="reviewED">
-                <button>수정</button>
-                <button onClick={() => reivewDelete(item.reviewId)}>
-                  삭제
-                </button>
-              </div>
+              {item.memberId === data.userId ? (
+                <div className="reviewED">
+                  <button>수정</button>
+                  <button onClick={() => reivewDelete(item.reviewId)}>
+                    삭제
+                  </button>
+                </div>
+              ) : null}
             </div>
           ))}
         </div>
@@ -193,14 +226,13 @@ function Home() {
         </div>
       )}
 
-      <Link
-        to={`./register`}
-        state={{
-          hallId: hallId,
-        }}
+      <button
+        id="reviewRegister"
+        onClick={() => navigate("./register", { state: { hallId: hallId } })}
       >
-        <button id="reviewRegister">등록하기</button>
-      </Link>
+        등록하기
+      </button>
+      <Footer />
     </div>
   );
 }

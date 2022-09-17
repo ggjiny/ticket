@@ -43,7 +43,7 @@ const Header = () => {
   const SearchSytle = useMemo(
     () => ({
       marginTop: "20px",
-      width: "50%",
+      width: "fit-content",
       //float : 'right',
     }),
     []
@@ -64,7 +64,7 @@ const Header = () => {
       <Button
         href={KAKAO_AUTH_URL}
         style={{
-          backgroundColor: "#666666",
+          backgroundColor: "#283858",
           color: "white",
           border: "none",
           fontSize: "18px",
@@ -110,7 +110,7 @@ const Header = () => {
             <Search
               value={inputValue}
               onChange={onSearch}
-              placeholder="검색어를 입력하세요."
+              placeholder="공연, 극장을 검색하세요."
               onSearch={onSubmit}
               style={SearchSytle}
             />

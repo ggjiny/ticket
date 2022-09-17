@@ -6,6 +6,7 @@ import { Button, Card } from "antd";
 import Header from "../Header/Header";
 import PartsList from "../PartsPage/PartsList";
 import moment from "moment";
+import Footer from "../Footer/Footer";
 const acToken = sessionStorage.getItem("accesstoken");
 
 const DetailPage = () => {
@@ -80,18 +81,25 @@ const DetailPage = () => {
       <Card>
         <img
           src={data.imgUrl}
-          style={{ height: "400px", marginBottom: "20px" }}
+          style={{ height: "300px", marginBottom: "20px" }}
         />
-        <h3>공연명 : {data.name}</h3>
-        <h3>카테고리 : {data.keyword}</h3>
-        <h3>
-          공연날짜 : {sdate} {sdate === edate ? null : `- ${edate}`}
-        </h3>
-        <h3>공연장 : {data.hallName}</h3>
+        <div
+          style={{
+            textAlign: "left",
+            width: "fit-content",
+            margin: "0 auto",
+          }}
+        >
+          <h3>공연명 : {data.name}</h3>
+          <h3>카테고리 : {data.keyword}</h3>
+          <h3>
+            공연날짜 : {sdate} {sdate === edate ? null : `- ${edate}`}
+          </h3>
+          <h3>공연장 : {data.hallName}</h3>
+        </div>
       </Card>
       {/* 팟 목록 조회 버튼 */}
 
-      <br />
       <Button
         style={{
           fontSize: "20px",
@@ -128,6 +136,7 @@ const DetailPage = () => {
       >
         후기
       </Button>
+      <Footer />
     </div>
   );
 };

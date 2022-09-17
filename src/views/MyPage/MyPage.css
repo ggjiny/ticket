@@ -1,7 +1,8 @@
 .container {
   box-sizing: border-box;
   margin-top: 80px;
-  margin-left: 200px;
+  margin-left: 120px;
+  height: fit-content;
 }
 .left_box {
   width: 385px;
@@ -38,6 +39,7 @@
 
 .buttons button {
   margin-top: 20px;
+  margin-bottom: 10px;
   font-size: 18px;
   font-weight: bold;
   border-radius: 10px;

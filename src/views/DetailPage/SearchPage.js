@@ -65,38 +65,44 @@ const SearchPage = () => {
         <center>
           <h1> '{inputValue}'에 관한 결과입니다.</h1>
           <hr color="black" width={400} height={250} />
-          <div
-            className="site-card-wrapper"
-            style={{ marginLeft: "0px", marginTop: "20px" }}
-          >
-            <Row gutter={10}>
-              {cultures.map((culture, idx) => (
-                <Col
-                  span={8}
-                  style={{ marginRight: "-200px", marginTop: "20px" }}
-                >
-                  <Link
-                    to={`/detail/${culture.cultureId}`}
-                    state={{
-                      id: culture.cultureId,
-                    }}
+          {cultures.length > 0 ? (
+            <div
+              className="site-card-wrapper"
+              style={{ marginLeft: "0px", marginTop: "20px" }}
+            >
+              <Row gutter={10}>
+                {cultures.map((culture, idx) => (
+                  <Col
+                    span={8}
+                    style={{ marginRight: "-200px", marginTop: "20px" }}
                   >
-                    <Card
-                      style={{ width: 250 }}
-                      cover={
-                        <img alt={culture.cultureId} src={culture.imgUrl} />
-                      }
+                    <Link
+                      to={`/detail/${culture.cultureId}`}
+                      state={{
+                        id: culture.cultureId,
+                      }}
                     >
-                      <Meta
-                        title={culture.name}
-                        description={culture.hallName}
-                      />
-                    </Card>
-                  </Link>
-                </Col>
-              ))}
-            </Row>
-          </div>
+                      <Card
+                        style={{ width: 250 }}
+                        cover={
+                          <img alt={culture.cultureId} src={culture.imgUrl} />
+                        }
+                      >
+                        <Meta
+                          title={culture.name}
+                          description={culture.hallName}
+                        />
+                      </Card>
+                    </Link>
+                  </Col>
+                ))}
+              </Row>
+            </div>
+          ) : (
+            <div style={{ marginTop: "200px" }}>
+              <h2>검색 결과가 없습니다.</h2>
+            </div>
+          )}
         </center>
       </div>
     </>

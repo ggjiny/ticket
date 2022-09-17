@@ -141,7 +141,7 @@ const MainPage = () => {
                 alt="포스터"
                 id={result.number}
                 src={result.imgUrl}
-                width={200}
+                width={180}
               />
             </Link>
             {/* <Image id={result.number} src={result.imgUrl} width={200} /> */}
@@ -155,7 +155,12 @@ const MainPage = () => {
     <>
       {/* HEADER */}
       <Header />
-      <div style={{ marginRight: "280px", marginLeft: "280px" }}>
+      <div
+        style={{
+          marginRight: "280px",
+          marginLeft: "280px",
+        }}
+      >
         <h2>{name ? name + "님이 구매한 공연" : null}</h2>
         {caro};{/* 추천 캐러셀 */}
         <hr />
@@ -180,7 +185,7 @@ const MainPage = () => {
                   alt="포스터"
                   id={item.cultureId}
                   src={item.imgUrl}
-                  width={200}
+                  width={180}
                 />
               </Link>
             </center>

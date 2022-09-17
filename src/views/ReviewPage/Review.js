@@ -14,6 +14,7 @@ function Review({
   number,
   starPoint,
   reviewId,
+  createdAt,
 }) {
   return (
     <div>
@@ -48,6 +49,7 @@ function Review({
           &nbsp;{starPoint}
         </p>
         <p id="reviewContent">{contents}</p>
+        <p>작성 시간:{createdAt}</p>
       </div>
     </div>
   );

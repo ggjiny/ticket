@@ -1,27 +1,22 @@
 import Review from "./Review";
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
 import "./ReviewHome.css";
-import Header from "../Header/Header";
 import axios from "axios";
-import useDidMountEffect from "./useDidMountEffect";
+import Footer from "../Footer/Footer";
 
-function MyReview() {
+function UserReview(props) {
   const acToken = sessionStorage.getItem("accesstoken");
 
   const [reviews, setReviews] = useState([]);
-  let hallId = "";
 
-  const myUrl = "/api/v1/reviews";
-
-  let deleteUrl = "/api/v1/reviews/delete?hall=";
+  const myUrl = "/api/v1/reviews/" + props.memberId;
 
   //리뷰 가져오기
   useEffect(() => {
-    getMyReview();
+    getUserReview();
   }, []);
 
-  async function getMyReview() {
+  async function getUserReview() {
     await axios
       .get(myUrl, {
         headers: {
@@ -33,45 +28,14 @@ function MyReview() {
           response.data.result !== "undefined" &&
           response.data.result !== null
         )
-          //setData(response.data.result);
           setReviews(response.data.result);
         console.log(reviews);
-        //setToggle(false);
       })
       .catch((error) => {
         console.log(error.response.data.errorMessage);
       }); //실패했을 때
   }
 
-  async function deleteReview() {
-    await axios
-      .delete(deleteUrl, {
-        headers: {
-          Authorization: `Bearer ${acToken}`,
-        },
-      })
-      .then((response) => {
-        if (
-          response.data.result !== "undefined" &&
-          response.data.result !== null
-        ) {
-          alert(response.data.message);
-          //window.location.replace("/review");
-          getMyReview();
-        }
-      })
-      .catch((error) => {
-        console.log(error.response.data.errorMessage);
-      }); //실패했을 때
-  }
-
-  //삭제
-  const reivewDelete = (reId, reName) => {
-    deleteUrl = deleteUrl + reName + "&reviewId=" + reId;
-    console.log(deleteUrl);
-    deleteReview();
-    //setToggle(true);
-  };
   return (
     <div>
       {reviews.length > 0 ? (
@@ -91,14 +55,7 @@ function MyReview() {
                 starPoint={review.starPoint}
                 reviewId={review.reviewId}
               />
-              <div className="reviewED">
-                <button>수정</button>
-                <button
-                  onClick={() => reivewDelete(review.reviewId, review.hallName)}
-                >
-                  삭제
-                </button>
-              </div>
+              <div className="reviewED"></div>
             </div>
           ))}
         </div>
@@ -110,4 +67,4 @@ function MyReview() {
     </div>
   );
 }
-export default MyReview;
+export default UserReview;

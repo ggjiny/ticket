@@ -18,10 +18,12 @@ function Parts({
   currentPartTotal,
   status,
   role,
+  createdAt,
   getParts,
 }) {
   const [members, setMembers] = useState([]);
   const [date, setDate] = useState("");
+  const [cdate, setCdate] = useState("");
   const acToken = sessionStorage.getItem("accesstoken");
 
   const baseUrl = `/api/v1/parts/${cultureId}/${partId}/`;
@@ -31,6 +33,17 @@ function Parts({
     const month = partDate[1] >= 10 ? partDate[1] : `0${partDate[1]}`;
     const day = partDate[2];
     setDate(`${year}.${month}.${day}`);
+  };
+
+  const changeDate2 = () => {
+    const year = createdAt[0];
+    const month = createdAt[1] >= 10 ? createdAt[1] : `0${createdAt[1]}`;
+    const day = createdAt[2];
+    const hour =
+      createdAt[3] + 9 > 24 ? createdAt[3] + 9 - 24 : createdAt[3] + 9;
+    const min = createdAt[4];
+
+    setCdate(`${year}.${month}.${day} ${hour}:${min}`);
   };
 
   useEffect(() => {
@@ -52,6 +65,7 @@ function Parts({
           console.log(response.data.result);
           setMembers(response.data.result);
           changeDate();
+          changeDate2();
         }
       })
       .catch((error) => {
@@ -232,8 +246,9 @@ function Parts({
       </div>
 
       <div className="p_explain">
-        <p id="concertName">• 공연명: {cultureName}</p>
-        <p id="meetingDate">• 공연 날짜: {date}</p>
+        <p id="concertName">공연명: {cultureName}</p>
+        <p id="meetingDate">공연 날짜: {date}</p>
+        <p>등록 날짜: {cdate}</p>
       </div>
       {crole}
     </div>

@@ -100,10 +100,11 @@
   text-align: left;
   position: relative;
   left: 140px;
-  top: -155px;
+  top: -145px;
 }
 .input label {
   padding-right: 15px;
+  font-size: 16px;
 }
 .input2 ul li {
   line-height: 18px;
@@ -116,12 +117,12 @@
 }
 
 #parts_register {
-  width: 230px;
+  width: 200px;
   display: block;
   margin-top: -75px;
   font-size: 20px;
   letter-spacing: 1px;
-  margin-left: 100px;
+  margin-left: 120px;
   margin-bottom: 10px;
   padding: 7px 10px;
   color: black;

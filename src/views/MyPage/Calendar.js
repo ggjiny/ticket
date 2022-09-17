@@ -7,6 +7,7 @@ import interactionPlugin from "@fullcalendar/interaction"; // needed
 import axios from "axios";
 import useDidMountEffect from "./useDidMountEffect";
 import moment from "moment";
+import Footer from "../Footer/Footer";
 const acToken = sessionStorage.getItem("accesstoken");
 
 function Calendar() {
@@ -161,13 +162,13 @@ function Calendar() {
           }}
           eventContent={renderEventContent}
           events={event}
-          contentHeight={"800px"}
+          contentHeight={"750px"}
           windowResize={true}
           locale={"ko"}
           fixedWeekCount={false}
         />
       </div>
-      <form id="imgf" style={{ marginTop: "-210px", marginLeft: "0px" }}>
+      <form id="imgf" style={{ marginTop: "-220px", marginLeft: "0px" }}>
         <h2>캘린더에 사진을 추가하세요.</h2>
         {/* <label for="files" style={{ display: "none" }}></label> */}
         <input

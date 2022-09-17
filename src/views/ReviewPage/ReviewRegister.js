@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
 import "./ReviewRegister.css";
 import axios from "axios";
+import Footer from "../Footer/Footer";
 
 function ReviewRegister() {
   const acToken = sessionStorage.getItem("accesstoken");
@@ -129,6 +130,7 @@ function ReviewRegister() {
                 name="starPoint"
                 value={starPoint}
                 onChange={handleChange}
+                style={{ border: "1.5px solid #999" }}
               ></input>
             </li>
             <li>
@@ -150,6 +152,7 @@ function ReviewRegister() {
           </form>
         </ul>
       </div>
+      <Footer />
     </div>
   );
 }
