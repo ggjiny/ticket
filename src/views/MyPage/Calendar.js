@@ -75,8 +75,7 @@ function Calendar() {
         //alert("파일 보내기 성공!");
       })
       .catch((error) => {
-        alert("달력을 불러오지 못했습니다.");
-        console.log(error);
+        alert(error.response.data.errorMessage);
       }); //실패했을 때
   }
 
@@ -89,15 +88,15 @@ function Calendar() {
         if (
           response.data.result !== "undefined" &&
           response.data.result !== null
-        )
+        ) {
           console.log("success!");
-        console.log(response);
-        alert("사진이 저장되었습니다.");
-        calendar();
+          console.log(response);
+          alert("사진이 저장되었습니다.");
+          calendar();
+        }
       })
       .catch((error) => {
-        alert("입력이 잘못 되었습니다.");
-        console.log(error);
+        alert(error.response.data.errorMessage);
       }); //실패했을 때
   }
 
@@ -114,11 +113,11 @@ function Calendar() {
           response.data.result !== null
         ) {
           setEvent(response.data.result);
-          console.log(event);
+          console.log(response.data.result);
         }
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error.response.data.errorMessage);
       }); //실패했을 때
   }
 
@@ -158,28 +157,30 @@ function Calendar() {
           dateClick={(args) => {
             setDate({ ...date, date: args.dateStr });
             setDisabled(false);
-            //console.log(e);
           }}
           eventContent={renderEventContent}
           events={event}
-          contentHeight={"750px"}
+          contentHeight={"900px"}
           windowResize={true}
           locale={"ko"}
           fixedWeekCount={false}
         />
       </div>
-      <form id="imgf" style={{ marginTop: "-220px", marginLeft: "0px" }}>
-        <h2>캘린더에 사진을 추가하세요.</h2>
-        {/* <label for="files" style={{ display: "none" }}></label> */}
-        <input
-          type="file"
-          name="files"
-          id="imageBtn"
-          accept="img/*"
-          onChange={handleFile}
-          disabled={disabled}
-        />
-      </form>
+      <div id="imgf" style={{ marginTop: "-240px" }}>
+        <h2 style={{ paddingBottom: "-15px" }}>{date ? date.date : null}</h2>
+
+        <form>
+          <input
+            type="file"
+            name="files"
+            id="imageBtn"
+            accept="image/*"
+            onChange={handleFile}
+            disabled={disabled}
+            style={{ paddingTop: "-15px" }}
+          />
+        </form>
+      </div>
     </div>
   );
 }

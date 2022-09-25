@@ -67,7 +67,7 @@ const DetailPage = () => {
           setData(response.data.result);
       })
       .catch((error) => {
-        console.log(error);
+        alert(error.response.data.errorMessage);
       }); //실패했을 때
   }
 

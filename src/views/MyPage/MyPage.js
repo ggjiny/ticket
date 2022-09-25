@@ -41,8 +41,7 @@ function MyPage() {
         //console.log("success!");
       })
       .catch((error) => {
-        alert("입력이 잘못 되었습니다.");
-        console.log(error);
+        alert(error.response.data.errorMessage);
       }); //실패했을 때
   }
   useEffect(() => {
@@ -62,7 +61,7 @@ function MyPage() {
               <img src={data.imgUrl} style={{ borderRadius: "70%" }} />
               <h2>{data.username}</h2>
               <h1>{data.email}</h1>
-              <h1>{data.phoneNumber}</h1>
+              {/* <h1>{data.phoneNumber}</h1> */}
             </section>
             <section
               className="keywords"
@@ -75,21 +74,34 @@ function MyPage() {
                     style={{
                       marginRight: "5px",
                       backgroundColor: "#fff",
-                      padding: "10px",
-                      paddingTop: "2px",
+                      padding: "12px",
+                      paddingTop: "7px",
                       border: "1px solid #ccc",
                       borderRadius: "20px",
+                      fontSize: "14px",
+                      width: "fit-content",
                     }}
                   >
-                    <p># {keyword} </p>
+                    <p>#{keyword} </p>
                   </div>
                 ))}
             </section>
-            <section className="buttons">
-              <button onClick={() => setSelect("Calendar")}>포토 캘린더</button>
-              <button onClick={() => setSelect("Review")}>후기</button>
-              <button onClick={() => navigate("/interwork")}>티켓 연동</button>
-              <button onClick={() => handleModal2()}>팟 모집 목록</button>
+            <section>
+              <button className="buttons" onClick={() => setSelect("Calendar")}>
+                포토 캘린더
+              </button>
+              <button className="buttons" onClick={() => setSelect("Review")}>
+                후기
+              </button>
+              <button
+                className="buttons"
+                onClick={() => navigate("/interwork")}
+              >
+                티켓 연동
+              </button>
+              <button className="buttons" onClick={() => handleModal2()}>
+                팟 모집 목록
+              </button>
               <MyPartsList
                 open={modalOpen2}
                 close={handleModal2}
@@ -106,7 +118,20 @@ function MyPage() {
               <MyReview />
             </div>
           ) : (
-            <Calendar />
+            <>
+              <Calendar />
+              <p
+                style={{
+                  marginTop: "-130px",
+                  marginLeft: "10px",
+                  marginBottom: "200px",
+                  fontSize: "18px",
+                  color: "gray",
+                }}
+              >
+                원하는 날짜를 선택하고 포스터를 추가하세요.
+              </p>
+            </>
           )}
         </div>
       </div>

@@ -18,9 +18,6 @@ const Header = () => {
   const navigate = useNavigate();
   let Tokencase = <div></div>;
   const acToken = sessionStorage.getItem("accesstoken");
-  // const SearchInput = styled(Input.Search)`
-  //   vertical-align: middle;
-  // `;
 
   const onSearch = (e) => {
     setInputValue(e.target.value);
@@ -31,14 +28,13 @@ const Header = () => {
     navigate(url);
   };
 
-  const ButtonSytle = useMemo(
-    () => ({
-      float: "right",
-      marginTop: "20px",
-      marginRight: "20px",
-    }),
-    []
-  );
+  const onClickHandle = () => {
+    if (window.confirm("로그아웃 하시겠습니까?")) {
+      sessionStorage.removeItem("accesstoken");
+      window.location.replace("/");
+      alert("로그아웃 되었습니다.");
+    }
+  };
 
   const SearchSytle = useMemo(
     () => ({
@@ -81,20 +77,43 @@ const Header = () => {
       /*token이 존재하는 경우*/
     }
     Tokencase = (
-      <Button
-        href={"/mypage"}
-        style={{
-          backgroundColor: "#283858",
-          color: "white",
-          border: "none",
-          fontSize: "18px",
-          float: "right",
-          marginTop: "20px",
-          marginRight: "20px",
-        }}
-      >
-        마이페이지
-      </Button>
+      <div>
+        <Button
+          onClick={() => navigate("/mypage")}
+          style={{
+            backgroundColor: "#283858",
+            color: "white",
+            border: "none",
+            fontSize: "18px",
+            float: "right",
+            marginTop: "20px",
+            marginRight: "20px",
+          }}
+        >
+          마이페이지
+        </Button>
+        <Button
+          onClick={() => onClickHandle()}
+          style={{
+            backgroundColor: "#283858",
+            color: "white",
+            border: "none",
+            fontSize: "18px",
+            float: "right",
+            marginTop: "20px",
+            // marginRight: "20px",
+          }}
+        >
+          로그아웃
+        </Button>
+        <Search
+          value={inputValue}
+          onChange={onSearch}
+          placeholder="공연, 극장을 검색하세요."
+          onSearch={onSubmit}
+          style={SearchSytle}
+        />
+      </div>
     );
   }
 
@@ -107,13 +126,6 @@ const Header = () => {
             {/* 로그인 안 되어있을 경우, 로그인 / 회원가입 버튼 */}
             {Tokencase}
             {/* 검색 */}
-            <Search
-              value={inputValue}
-              onChange={onSearch}
-              placeholder="공연, 극장을 검색하세요."
-              onSearch={onSubmit}
-              style={SearchSytle}
-            />
           </div>
           <br />
         </div>

@@ -54,6 +54,7 @@ function UserReview(props) {
                 number={review.number}
                 starPoint={review.starPoint}
                 reviewId={review.reviewId}
+                createdAt={review.createdAt}
               />
               <div className="reviewED"></div>
             </div>

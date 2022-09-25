@@ -55,7 +55,7 @@ function UserPage() {
             <img src={data.imgUrl} style={{ borderRadius: "70%" }} />
             <h2>{data.username}</h2>
             <h1>{data.email}</h1>
-            <h1>{data.phoneNumber}</h1>
+            {/* <h1>{data.phoneNumber}</h1> */}
           </section>
           <section
             className="keywords"
@@ -74,18 +74,21 @@ function UserPage() {
                     borderRadius: "20px",
                   }}
                 >
-                  <p># {keyword} </p>
+                  <p>#{keyword} </p>
                 </div>
               ))}
           </section>
-          <section className="buttons">
+          <section>
             <button
+              className="buttons"
               style={{ marginRight: "20px" }}
               onClick={() => setSelect("Calendar")}
             >
               포토 캘린더
             </button>
-            <button onClick={() => setSelect("Review")}>후기</button>
+            <button className="buttons" onClick={() => setSelect("Review")}>
+              후기
+            </button>
           </section>
         </div>
         {select === "Review" ? (

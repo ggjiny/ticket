@@ -1,11 +1,11 @@
 .container {
   box-sizing: border-box;
-  margin-top: 80px;
-  margin-left: 120px;
+  margin-top: 50px;
+  margin-left: 100px;
   height: fit-content;
 }
 .left_box {
-  width: 385px;
+  width: 430px;
   text-align: center;
 }
 .info {
@@ -37,7 +37,7 @@
   margin-bottom: 30px;
 }
 
-.buttons button {
+.buttons {
   margin-top: 20px;
   margin-bottom: 10px;
   font-size: 18px;

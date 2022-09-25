@@ -43,8 +43,7 @@ function ReviewRegister() {
         }
       })
       .catch((error) => {
-        alert("입력이 잘못 되었습니다.");
-        console.log(error);
+        alert(error.response.data.errorMessage);
       }); //실패했을 때
   }
 

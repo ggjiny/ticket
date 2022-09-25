@@ -14,6 +14,7 @@ function Home() {
   const [data, setData] = useState([]);
   const [disabled, setDisabled] = useState(false);
   const [reviews, setReviews] = useState([]);
+  const [toggle, setToggle] = useState(true);
 
   const location = useLocation();
   const hallId = location.state.hallId;
@@ -22,7 +23,7 @@ function Home() {
   const baseUrl = "/api/v1/member";
 
   async function getInfo() {
-    //사용자 정보 받아오기
+    //사용자 정보 받아오기 -> 수정, 삭제 버튼 때문
     await axios
       .get(baseUrl, {
         headers: {
@@ -40,8 +41,7 @@ function Home() {
         //console.log("success!");
       })
       .catch((error) => {
-        alert("입력이 잘못 되었습니다.");
-        console.log(error);
+        alert(error.response.data.errorMessage);
       }); //실패했을 때
   }
   useEffect(() => {
@@ -56,19 +56,9 @@ function Home() {
   });
 
   const { floor, part, record, number } = search;
-  const searchUrl =
-    "/api/v1/reviews/search?hall=" +
-    hallId +
-    "&floor=" +
-    search.floor +
-    "&part=" +
-    search.part +
-    "&record=" +
-    search.record +
-    "&number=" +
-    search.number;
+  const searchUrl = `/api/v1/reviews/search?hall=${hallId}&floor=${search.floor}&part=${search.part}&record=${search.record}&number=${search.number}`;
 
-  let deleteUrl = "/api/v1/reviews/delete?hall=" + hallId + "&reviewId="; // + reId;
+  let deleteUrl = `/api/v1/reviews/delete?hall=${hallId}&reviewId=`; // + reId;
 
   //리뷰 가져오기
   useEffect(() => {
@@ -86,12 +76,15 @@ function Home() {
         if (
           response.data.result !== "undefined" &&
           response.data.result !== null
-        )
+        ) {
           setReviews(response.data.result);
-        console.log(response.data.result);
+          console.log(response.data.result);
+          setToggle(true);
+        }
       })
       .catch((error) => {
         console.log(error.response.data.errorMessage);
+        setToggle(false);
       }); //실패했을 때
   }
 
@@ -122,7 +115,6 @@ function Home() {
           response.data.result !== null
         ) {
           alert(response.data.message);
-          //window.location.replace("/review");
           getReview();
         }
       })
@@ -133,10 +125,11 @@ function Home() {
 
   //삭제
   const reivewDelete = (re) => {
-    deleteUrl = deleteUrl + re;
-    console.log(deleteUrl);
-    deleteReview();
-    //setToggle(true);
+    if (window.confirm("리뷰를 삭제하시겠습니까?")) {
+      deleteUrl = deleteUrl + re;
+      console.log(deleteUrl);
+      deleteReview();
+    }
   };
   return (
     <div style={{ marginBottom: "100px" }}>
@@ -191,7 +184,7 @@ function Home() {
           </form>
         </ul>
       </div>
-      {reviews.length > 0 ? (
+      {toggle ? (
         <div>
           {reviews.map((item) => (
             <div key={item.reviewId}>
@@ -211,7 +204,7 @@ function Home() {
               />
               {item.memberId === data.userId ? (
                 <div className="reviewED">
-                  <button>수정</button>
+                  {/* <button>수정</button> */}
                   <button onClick={() => reivewDelete(item.reviewId)}>
                     삭제
                   </button>

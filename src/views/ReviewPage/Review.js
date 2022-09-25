@@ -1,6 +1,7 @@
 import "./Review.css";
 import { StarFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 function Review({
   hallId,
   memberId,
@@ -16,6 +17,20 @@ function Review({
   reviewId,
   createdAt,
 }) {
+  const [cdate, setCdate] = useState("");
+  const changeDate = () => {
+    const year = createdAt[0];
+    const month = createdAt[1] >= 10 ? createdAt[1] : `0${createdAt[1]}`;
+    const day = createdAt[2] >= 10 ? createdAt[2] : `0${createdAt[2]}`;
+    const hour = createdAt[3] < 10 ? `0${createdAt[3]}` : createdAt[3];
+    const min = createdAt[4] < 10 ? `0${createdAt[4]}` : createdAt[4];
+
+    setCdate(`${year}.${month}.${day} ${hour}:${min}`);
+  };
+  useEffect(() => {
+    if (createdAt) changeDate();
+  }, []);
+
   return (
     <div>
       <div className="reviewBox">
@@ -49,7 +64,7 @@ function Review({
           &nbsp;{starPoint}
         </p>
         <p id="reviewContent">{contents}</p>
-        <p>작성 시간:{createdAt}</p>
+        <p style={{ fontSize: "15px" }}>작성 시간: {cdate}</p>
       </div>
     </div>
   );

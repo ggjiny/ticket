@@ -31,7 +31,7 @@ function Parts({
   const changeDate = () => {
     const year = partDate[0];
     const month = partDate[1] >= 10 ? partDate[1] : `0${partDate[1]}`;
-    const day = partDate[2];
+    const day = partDate[2] >= 10 ? partDate[2] : `0${partDate[2]}`;
     setDate(`${year}.${month}.${day}`);
   };
 
@@ -39,9 +39,8 @@ function Parts({
     const year = createdAt[0];
     const month = createdAt[1] >= 10 ? createdAt[1] : `0${createdAt[1]}`;
     const day = createdAt[2];
-    const hour =
-      createdAt[3] + 9 > 24 ? createdAt[3] + 9 - 24 : createdAt[3] + 9;
-    const min = createdAt[4];
+    const hour = createdAt[3] < 10 ? `0${createdAt[3]}` : createdAt[3];
+    const min = createdAt[4] < 10 ? `0${createdAt[4]}` : createdAt[4];
 
     setCdate(`${year}.${month}.${day} ${hour}:${min}`);
   };
@@ -163,11 +162,10 @@ function Parts({
       {members.map((item) => (
         <Menu.Item key={item.memberId} style={{ border: "solid 1px #eee" }}>
           <Link
-            // to={`/mypage/${culture.cultureId}`}
-            // state={{
-            //   id: culture.cultureId,
-            // }}
-            to={`/mypage/`}
+            to={`/userpage/${item.memberId}}`}
+            state={{
+              id: item.memberId,
+            }}
           >
             {item.manager ? <CrownOutlined /> : <UserOutlined />}
             &nbsp;
@@ -181,42 +179,67 @@ function Parts({
   let crole = <div></div>;
   const checkRole = () => {
     if (role === "PART_USER") {
-      crole = (
-        <button
-          id="together"
-          style={{ width: "120px", marginLeft: "30px" }}
-          onClick={() => joinParts()}
-        >
-          함께가기
-        </button>
-      );
-    } else if (role === "PART_MANAGER") {
+      //일반사람
       crole = (
         <>
-          <button id="chatroom">채팅방</button>
           {status === "ACTIVE" ? (
             <button
-              id="endparts"
-              onClick={() => {
-                closeParts();
-              }}
+              id="together"
+              style={{ width: "120px", marginLeft: "30px" }}
+              onClick={() => joinParts()}
             >
-              마감하기
+              함께가기
             </button>
           ) : (
-            <button id="deleteparts" onClick={() => deleteParts()}>
-              삭제하기
+            <button
+              id="together"
+              style={{
+                width: "120px",
+                marginLeft: "30px",
+                backgroundColor: "#767677",
+              }}
+            >
+              마감
             </button>
           )}
         </>
       );
-    } else if (role === "PART_MEMBER") {
+    } else if (role === "PART_MANAGER") {
+      //방장
       crole = (
         <>
           <button id="chatroom">채팅방</button>
-          <button id="leaveparts" onClick={() => leaveParts()}>
-            나가기
-          </button>
+          {status === "ACTIVE" ? (
+            <>
+              {members.length > 2 ? (
+                <button
+                  id="endparts"
+                  onClick={() => {
+                    closeParts();
+                  }}
+                >
+                  마감하기
+                </button>
+              ) : (
+                <button id="deleteparts" onClick={() => deleteParts()}>
+                  삭제하기
+                </button>
+              )}
+            </>
+          ) : null}
+        </>
+      );
+    } else if (role === "PART_MEMBER") {
+      //멤버
+
+      crole = (
+        <>
+          <button id="chatroom">채팅방</button>
+          {status === "ACTIVE" ? (
+            <button id="leaveparts" onClick={() => leaveParts()}>
+              나가기
+            </button>
+          ) : null}
         </>
       );
     }

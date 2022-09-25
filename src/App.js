@@ -28,6 +28,7 @@ function App() {
 
   return (
     <Provider store={store}>
+      {/* <Router> basename="/"> */}
       <Router>
         <Routes>
           <Route path="/" element={<MainPage />} />

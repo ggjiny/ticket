@@ -70,6 +70,7 @@ function MyPartsList(props) {
                         currentPartTotal={part.currentPartTotal}
                         status={part.status}
                         role={part.role}
+                        createdAt={part.createdAt}
                         getParts={getMyParts}
                       />
                     </div>

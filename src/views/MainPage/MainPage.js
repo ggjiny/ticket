@@ -10,6 +10,7 @@ import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import { ButtonGroup } from "@mui/material";
 import "../LoginPage/setAuth";
+import { KAKAO_AUTH_URL } from "../../component/OAuth";
 
 const acToken = sessionStorage.getItem("accesstoken");
 
@@ -43,7 +44,9 @@ const MainPage = () => {
   let caro = <div></div>;
 
   useEffect(() => {
-    getInfo();
+    if (acToken) {
+      getInfo();
+    }
   }, []);
 
   // axios.defaults.headers.common["Authorization"] = `Bearer ${acToken}`;
@@ -62,12 +65,14 @@ const MainPage = () => {
           setName(response.data.result.username);
       })
       .catch((error) => {
-        console.log(error);
+        alert(error.response.data.errorMessage);
       }); //실패했을 때
   }
 
   useEffect(() => {
-    getReservation();
+    if (acToken) {
+      getReservation();
+    }
   }, []);
 
   async function getReservation() {
@@ -83,14 +88,17 @@ const MainPage = () => {
           response.data.result !== null
         )
           setData(response.data.result);
+        console.log(response.data.result);
       })
       .catch((error) => {
-        console.log(error);
+        alert(error.response.data.errorMessage);
       }); //실패했을 때
   }
 
   useEffect(() => {
-    getCulture();
+    if (acToken) {
+      getCulture();
+    }
   }, []);
 
   async function getCulture() {
@@ -106,9 +114,10 @@ const MainPage = () => {
           response.data.result !== null
         )
           setCulture(response.data.result);
+        console.log(response.data.result);
       })
       .catch((error) => {
-        console.log(error);
+        alert(error.response.data.errorMessage);
       }); //실패했을 때
   }
 
@@ -155,44 +164,66 @@ const MainPage = () => {
     <>
       {/* HEADER */}
       <Header />
-      <div
-        style={{
-          marginRight: "280px",
-          marginLeft: "280px",
-        }}
-      >
-        <h2>{name ? name + "님이 구매한 공연" : null}</h2>
-        {caro};{/* 추천 캐러셀 */}
-        <hr />
-        <br />
-        <h2>{name ? name + "님, " : null}이런 공연은 어때요?</h2>
-        <Carousel
-          centerMode={true}
-          infinite
-          autoPlaySpeed={4000}
-          autoPlay
-          responsive={responsive}
+      {name.length > 0 ? (
+        <div
+          style={{
+            marginRight: "280px",
+            marginLeft: "280px",
+          }}
         >
-          {culture.map((item) => (
-            <center key={item.cultureId}>
-              <Link
-                to={`/detail/${item.cultureId}`}
-                state={{
-                  id: item.cultureId,
-                }}
-              >
-                <Image
-                  alt="포스터"
-                  id={item.cultureId}
-                  src={item.imgUrl}
-                  width={180}
-                />
-              </Link>
-            </center>
-          ))}
-        </Carousel>
-      </div>
-      {/* FOOTER(TOP BUTTON) */}
+          <h2>
+            {name ? (
+              <div>
+                <a style={{ fontWeight: "bold" }}>{name}</a>
+                <a style={{ color: "black" }}>님이 구매한 공연</a>
+              </div>
+            ) : null}
+          </h2>
+          {caro};{/* 추천 캐러셀 */}
+          <hr />
+          <br />
+          <h2>
+            {name ? (
+              <div>
+                <a style={{ fontWeight: "bold" }}>{name}</a>
+                <a style={{ color: "black" }}>님, 이런 공연은 어때요?</a>
+              </div>
+            ) : (
+              <a>이런 공연은 어때요?</a>
+            )}
+          </h2>
+          <Carousel
+            centerMode={true}
+            infinite
+            autoPlaySpeed={4000}
+            autoPlay
+            responsive={responsive}
+          >
+            {culture.map((item) => (
+              <center key={item.cultureId}>
+                <Link
+                  to={`/detail/${item.cultureId}`}
+                  state={{
+                    id: item.cultureId,
+                  }}
+                >
+                  <Image
+                    alt="포스터"
+                    id={item.cultureId}
+                    src={item.imgUrl}
+                    width={180}
+                  />
+                </Link>
+              </center>
+            ))}
+          </Carousel>
+        </div>
+      ) : (
+        <div style={{ marginLeft: "500px", marginTop: "30px" }}>
+          <h1>로그인이 필요한 서비스입니다.</h1>
+          <a href={KAKAO_AUTH_URL}> → 로그인하러 가기</a>
+        </div>
+      )}
       <Footer />
     </>
   );

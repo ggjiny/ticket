@@ -23,7 +23,8 @@
   margin-right: 30px;
 }
 #title {
-  font-family: fantasy;
+  /*font-family: fantasy;*/
+  font-family: "Anton", sans-serif;
   font-size: 38px;
   position: absolute;
   top: 90px;
