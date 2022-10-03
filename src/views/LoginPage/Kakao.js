@@ -8,6 +8,8 @@ import axios from "axios";
 
 import { KAKAO_AUTH_URL } from "../../component/OAuth";
 import { ConsoleSqlOutlined } from "@ant-design/icons";
+import { Scale } from "@mui/icons-material";
+import Footer from "../Footer/Footer";
 
 const Kakao = (props) => {
   const [nickname, setNickname] = useState("");
@@ -35,8 +37,33 @@ const Kakao = (props) => {
 
   const InputStyle = useMemo(
     () => ({
-      width: "30%",
+      width: "300px",
       marginBottom: "10px",
+      fontSize: "20px",
+    }),
+    []
+  );
+  const KeywordStyle = useMemo(
+    () => ({
+      transform: "scale(1.5)",
+      cursor: "pointer",
+      marginRight: "10px",
+    }),
+    []
+  );
+  const infoStyle = useMemo(
+    () => ({
+      width: "200px",
+      display: "block",
+      fontSize: "19px",
+      cursor: "pointer",
+
+      padding: "8px 10px",
+      borderRadius: "40px",
+      color: "black",
+      background: "#f5f5f5",
+      border: "solid 1px #ccc",
+      boxShadow: "0px 3px 5px rgba(0, 0, 0, 0.25)",
     }),
     []
   );
@@ -72,19 +99,6 @@ const Kakao = (props) => {
     keywords: checkedInputs,
   };
 
-  // const onClickHandler = (e) => {
-  //   if (data.keywords.length === 0) {
-  //     alert("키워드를 체크해주세요.");
-  //   }
-  // else if (data.nickname == "") {
-  //   alert("닉네임을 입력해주세요");
-  // } else if (data.phoneNumber == "") {
-  //   alert("전화번호를 입력헤주세요");
-  // } else {
-  //   //onSubmit();
-  // }
-  //};
-
   const baseUrl = "/api/v1/member";
 
   async function getMember() {
@@ -96,7 +110,7 @@ const Kakao = (props) => {
       })
       .then((res) => {
         console.log(res.data);
-        //setUserName(res.data.result.username);
+        setUserName(res.data.result.username);
         window.location.replace("/");
       })
       .catch((error) => {
@@ -107,11 +121,6 @@ const Kakao = (props) => {
   useEffect(() => {
     getMember();
   }, []);
-
-  // if (userName.length >0) {
-  //   alert("유저정보가 이미 존재합니다.");
-  //   navigate("/");
-  // }
 
   async function postMember() {
     console.log(data);
@@ -149,73 +158,97 @@ const Kakao = (props) => {
     <>
       <Header />
       <center>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <input
-              name="콘서트"
-              id={"CONCERT"}
-              type="checkbox"
-              onChange={(e) => {
-                changeHandler(e.currentTarget.checked, "CONCERT");
-              }}
-              checked={checkedInputs.includes("CONCERT") ? true : false}
-            />
-            <label>콘서트</label>
-            <input
-              id={"MUSICAL"}
-              type="checkbox"
-              onChange={(e) => {
-                changeHandler(e.currentTarget.checked, "MUSICAL");
-              }}
-              checked={checkedInputs.includes("MUSICAL") ? true : false}
-            />
-            <label margin="30px">뮤지컬</label>
-            <input
-              id={"CLASSIC"}
-              type="checkbox"
-              onChange={(e) => {
-                changeHandler(e.currentTarget.checked, "CLASSIC");
-              }}
-              checked={checkedInputs.includes("CLASSIC") ? true : false}
-            />
-            <label>클래식</label>
-            <input
-              id={"EXHIBITION"}
-              type="checkbox"
-              onChange={(e) => {
-                changeHandler(e.currentTarget.checked, "EXHIBITION");
-              }}
-              checked={checkedInputs.includes("EXHIBITION") ? true : false}
-            />
-            <label>전시회</label>
-          </div>
-          <div style={ButtonStyle}>
-            <label htmlFor="user-nickname">닉네임</label>
+        <div
+          style={{
+            border: "1px solid #ddd",
+            borderRadius: "30px",
+            margin: "50px 200px",
+            padding: "80px",
+          }}
+        >
+          <h1>정보를 입력해주세요.</h1>
+          <hr />
+          <h2 style={{ marginTop: "30px", fontWeight: "bold" }}>
+            키워드를 선택하세요.
+          </h2>
+          <form onSubmit={handleSubmit}>
+            <div>
+              <input
+                name="콘서트"
+                id={"CONCERT"}
+                type="checkbox"
+                style={KeywordStyle}
+                onChange={(e) => {
+                  changeHandler(e.currentTarget.checked, "CONCERT");
+                }}
+                checked={checkedInputs.includes("CONCERT") ? true : false}
+              />
+              <label style={{ fontSize: "20px", marginRight: "20px" }}>
+                CONCERT
+              </label>
+              <input
+                id={"MUSICAL"}
+                type="checkbox"
+                style={KeywordStyle}
+                onChange={(e) => {
+                  changeHandler(e.currentTarget.checked, "MUSICAL");
+                }}
+                checked={checkedInputs.includes("MUSICAL") ? true : false}
+              />
+              <label style={{ fontSize: "20px", marginRight: "20px" }}>
+                MUSICAL
+              </label>
+              <input
+                id={"CLASSIC"}
+                type="checkbox"
+                style={KeywordStyle}
+                onChange={(e) => {
+                  changeHandler(e.currentTarget.checked, "CLASSIC");
+                }}
+                checked={checkedInputs.includes("CLASSIC") ? true : false}
+              />
+              <label style={{ fontSize: "20px", marginRight: "20px" }}>
+                CLASSIC
+              </label>
+              <input
+                id={"EXHIBITION"}
+                type="checkbox"
+                style={KeywordStyle}
+                onChange={(e) => {
+                  changeHandler(e.currentTarget.checked, "EXHIBITION");
+                }}
+                checked={checkedInputs.includes("EXHIBITION") ? true : false}
+              />
+              <label style={{ fontSize: "20px", marginRight: "20px" }}>
+                EXHIBITION
+              </label>
+            </div>
             <br />
-            <Input
-              type="string"
-              value={nickname}
-              onChange={onChangeNickname}
-              style={InputStyle}
-              required
-            />
-          </div>
-          {/* <div style={ButtonStyle}>
-            <label htmlFor="user-nickname">전화번호</label>
             <br />
-            <Input
-              type="string"
-              value={phone}
-              onChange={onChangePhone}
-              style={InputStyle}
-              required
-            />
-          </div> */}
-          <div style={ButtonStyle}>
-            <button type="submit">정보 등록하기</button>
-          </div>
-        </form>
+
+            <div style={ButtonStyle}>
+              <h2 style={{ marginTop: "30px", fontWeight: "bold" }}>
+                닉네임을 입력하세요.
+              </h2>
+              {/* <label htmlFor="user-nickname">닉네임</label> */}
+
+              <Input
+                type="string"
+                value={nickname}
+                onChange={onChangeNickname}
+                style={InputStyle}
+                required
+              />
+            </div>
+            <div>
+              <button type="submit" style={infoStyle}>
+                정보 등록하기
+              </button>
+            </div>
+          </form>
+        </div>
       </center>
+      <Footer />
     </>
   );
 };

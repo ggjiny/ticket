@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { Dropdown, Menu, Space } from "antd";
 import { UserOutlined, CrownOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import moment from "moment";
 
 function Parts({
   managerId,
@@ -24,9 +23,13 @@ function Parts({
   const [members, setMembers] = useState([]);
   const [date, setDate] = useState("");
   const [cdate, setCdate] = useState("");
+  //const [partCss, setPartCss] = useState("parts");
+  let partCss = "parts";
   const acToken = sessionStorage.getItem("accesstoken");
 
   const baseUrl = `/api/v1/parts/${cultureId}/${partId}/`;
+
+  const secondUrl = `/api/v1/parts/1/${partId}/`;
 
   const changeDate = () => {
     const year = partDate[0];
@@ -61,20 +64,19 @@ function Parts({
           response.data.result !== "undefined" &&
           response.data.result !== null
         ) {
-          console.log(response.data.result);
           setMembers(response.data.result);
           changeDate();
           changeDate2();
         }
       })
       .catch((error) => {
-        console.log(error.response.data.errorMessage);
+        alert(error.response.data.errorMessage);
       }); //실패했을 때
   }
   async function joinParts() {
     //참여하기
     await axios
-      .post(baseUrl + "join", {
+      .post(baseUrl + "join", "", {
         headers: {
           Authorization: `Bearer ${acToken}`,
         },
@@ -89,13 +91,13 @@ function Parts({
         }
       })
       .catch((error) => {
-        console.log(error.response.data.errorMessage);
+        alert(error.response.data.errorMessage);
       }); //실패했을 때
   }
   async function closeParts() {
     //마감하기
     await axios
-      .patch(baseUrl + "close", {
+      .patch(secondUrl + "close", "", {
         headers: {
           Authorization: `Bearer ${acToken}`,
         },
@@ -110,13 +112,13 @@ function Parts({
         }
       })
       .catch((error) => {
-        console.log(error.response.data.errorMessage);
+        alert(error.response.data.errorMessage);
       }); //실패했을 때
   }
   async function leaveParts() {
     //나가기
     await axios
-      .delete(baseUrl + "leave", {
+      .delete(secondUrl + "leave", {
         headers: {
           Authorization: `Bearer ${acToken}`,
         },
@@ -131,14 +133,14 @@ function Parts({
         }
       })
       .catch((error) => {
-        console.log(error.response.data.errorMessage);
+        alert(error.response.data.errorMessage);
       }); //실패했을 때
   }
 
   //삭제하기
   async function deleteParts() {
     await axios
-      .delete(baseUrl, {
+      .delete(secondUrl, {
         headers: {
           Authorization: `Bearer ${acToken}`,
         },
@@ -153,28 +155,35 @@ function Parts({
         }
       })
       .catch((error) => {
-        console.log(error.response.data.errorMessage);
+        alert(error.response.data.errorMessage);
       }); //실패했을 때
   }
 
-  const menu = (
-    <Menu>
-      {members.map((item) => (
-        <Menu.Item key={item.memberId} style={{ border: "solid 1px #eee" }}>
-          <Link
-            to={`/userpage/${item.memberId}}`}
-            state={{
-              id: item.memberId,
-            }}
-          >
-            {item.manager ? <CrownOutlined /> : <UserOutlined />}
-            &nbsp;
-            {item.memberName}
-          </Link>
-        </Menu.Item>
-      ))}
-    </Menu>
-  );
+  const menu = //모집인원
+    (
+      <Menu>
+        {members.map((item) => (
+          <Menu.Item key={item.memberId} style={{ border: "solid 1px #eee" }}>
+            <Link
+              to={`/userpage/${item.memberId}}`}
+              state={{
+                id: item.memberId,
+              }}
+            >
+              {item.manager ? <CrownOutlined /> : <UserOutlined />}
+              &nbsp;
+              {item.memberName}
+            </Link>
+          </Menu.Item>
+        ))}
+      </Menu>
+    );
+
+  const onClickHandle = (str, func) => {
+    if (window.confirm(str)) {
+      func();
+    }
+  };
 
   let crole = <div></div>;
   const checkRole = () => {
@@ -186,7 +195,9 @@ function Parts({
             <button
               id="together"
               style={{ width: "120px", marginLeft: "30px" }}
-              onClick={() => joinParts()}
+              onClick={() => {
+                onClickHandle("팟에 참여하시겠습니까?", joinParts);
+              }}
             >
               함께가기
             </button>
@@ -206,40 +217,69 @@ function Parts({
       );
     } else if (role === "PART_MANAGER") {
       //방장
+      partCss = "partsMe";
       crole = (
         <>
-          <button id="chatroom">채팅방</button>
           {status === "ACTIVE" ? (
             <>
-              {members.length > 2 ? (
-                <button
-                  id="endparts"
-                  onClick={() => {
-                    closeParts();
-                  }}
-                >
-                  마감하기
-                </button>
+              {members.length > 1 ? (
+                <>
+                  <button id="chatroom">채팅방</button>
+                  <button
+                    id="endparts"
+                    onClick={() => {
+                      onClickHandle("팟을 마감하시겠습니까?", closeParts);
+                    }}
+                  >
+                    마감하기
+                  </button>
+                </>
               ) : (
-                <button id="deleteparts" onClick={() => deleteParts()}>
+                <button
+                  id="deleteparts"
+                  onClick={() =>
+                    onClickHandle("팟을 삭제하시겠습니까?", deleteParts)
+                  }
+                >
                   삭제하기
                 </button>
               )}
             </>
-          ) : null}
+          ) : (
+            <button
+              id="chatroom"
+              style={{ width: "120px", marginLeft: "30px" }}
+            >
+              채팅방
+            </button>
+          )}
         </>
       );
     } else if (role === "PART_MEMBER") {
       //멤버
-
+      partCss = "partsIn";
       crole = (
         <>
-          <button id="chatroom">채팅방</button>
           {status === "ACTIVE" ? (
-            <button id="leaveparts" onClick={() => leaveParts()}>
-              나가기
+            <>
+              <button id="chatroom">채팅방</button>
+              <button
+                id="leaveparts"
+                onClick={() =>
+                  onClickHandle("팟에서 나가시겠습니까?", leaveParts)
+                }
+              >
+                나가기
+              </button>
+            </>
+          ) : (
+            <button
+              id="chatroom"
+              style={{ width: "120px", marginLeft: "30px" }}
+            >
+              채팅방
             </button>
-          ) : null}
+          )}
         </>
       );
     }
@@ -247,33 +287,36 @@ function Parts({
   checkRole();
 
   return (
-    <div className="parts">
-      <div className="p_contents">
-        <p id="letgo" style={{ fontSize: "19px" }}>
-          🎞 {partName}
-        </p>
-        <p id="description" style={{ fontSize: "16px", marginLeft: "30px" }}>
-          {partContent}
-        </p>
-      </div>
+    <div className="partsContainer">
+      <div className={partCss}>
+        <div className="p_contents">
+          <p id="letgo" style={{ fontSize: "19px" }}>
+            🎞 {partName}
+          </p>
+          <p id="description" style={{ fontSize: "16px", marginLeft: "30px" }}>
+            {partContent}
+          </p>
+        </div>
 
-      <div id="status">
-        <Dropdown overlay={menu}>
-          <a onClick={(e) => e.preventDefault()}>
-            <Space>
-              ▶ 모집 현황 [{currentPartTotal}/{partTotal}]
-              {/* <DownOutlined /> */}
-            </Space>
-          </a>
-        </Dropdown>
-      </div>
+        <br />
+        <br />
+        <div className="p_explain">
+          <p id="concertName">공연명: {cultureName}</p>
+          <p id="meetingDate">공연 날짜: {date}</p>
+          <p>등록 날짜: {cdate}</p>
+        </div>
 
-      <div className="p_explain">
-        <p id="concertName">공연명: {cultureName}</p>
-        <p id="meetingDate">공연 날짜: {date}</p>
-        <p>등록 날짜: {cdate}</p>
+        {crole}
+        <div id="status">
+          <Dropdown overlay={menu}>
+            <a onClick={(e) => e.preventDefault()}>
+              <Space>
+                ▶모집 현황[{currentPartTotal}/{partTotal}]
+              </Space>
+            </a>
+          </Dropdown>
+        </div>
       </div>
-      {crole}
     </div>
   );
 }

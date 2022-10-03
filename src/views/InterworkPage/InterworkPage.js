@@ -32,7 +32,7 @@ const InterworkPage = () => {
 
   async function getSiteInfo(siteName) {
     await axios
-      .get(`http://3.38.7.238:8080/api/v1/tickets/site/${siteName}`)
+      .get(`/api/v1/tickets/site/${siteName}`)
       .then((response) => {
         if (
           response.data.result !== "undefined" &&
@@ -61,10 +61,10 @@ const InterworkPage = () => {
     }
   };
 
-  const onDeleteHandle = (siteName) => {
+  async function onDeleteHandle(siteName) {
     getSiteInfo(siteName);
-    axios
-      .delete(`http://3.38.7.238:8080/api/v1/tickets/site/${id}`)
+    await axios
+      .delete(`/api/v1/tickets/site/${id}`)
       .then((res) => {
         alert("유저 정보 삭제에 성공하였습니다.");
         setSiteId(null);
@@ -73,7 +73,7 @@ const InterworkPage = () => {
         console.log("실패");
         console.log(error);
       });
-  };
+  }
 
   // axios.delete(`http://3.38.7.238:8080/api/v1/tickets/site/`, {
   //   headers: {

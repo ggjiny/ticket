@@ -68,10 +68,12 @@ function UserPage() {
                   style={{
                     marginRight: "5px",
                     backgroundColor: "#fff",
-                    padding: "10px",
-                    paddingTop: "2px",
+                    padding: "12px",
+                    paddingTop: "7px",
                     border: "1px solid #ccc",
                     borderRadius: "20px",
+                    fontSize: "14px",
+                    width: "fit-content",
                   }}
                 >
                   <p>#{keyword} </p>

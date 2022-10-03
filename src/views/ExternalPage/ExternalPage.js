@@ -35,12 +35,10 @@ const ExternalPage = () => {
     }),
     []
   );
+  async function postSite() {
+    await axios
 
-  const onSubmitForm = (e) => {
-    //e.preventDefault();
-
-    axios
-      .post(`http://3.38.7.238:8080/api/v1/tickets/site`, {
+      .post(`/api/v1/tickets/site`, {
         id: id,
         password: password,
         ticketSite: siteName,
@@ -53,6 +51,10 @@ const ExternalPage = () => {
         console.log("실패");
         console.log(error);
       });
+  }
+  const onSubmitForm = (e) => {
+    //e.preventDefault();
+    postSite();
   };
 
   return (

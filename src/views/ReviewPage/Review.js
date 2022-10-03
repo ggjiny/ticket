@@ -64,7 +64,9 @@ function Review({
           &nbsp;{starPoint}
         </p>
         <p id="reviewContent">{contents}</p>
-        <p style={{ fontSize: "15px" }}>작성 시간: {cdate}</p>
+        <p style={{ fontSize: "15px", marginLeft: "50px" }}>
+          작성 시간: {cdate}
+        </p>
       </div>
     </div>
   );

@@ -179,7 +179,8 @@ const MainPage = () => {
               </div>
             ) : null}
           </h2>
-          {caro};{/* 추천 캐러셀 */}
+          {caro}
+          {/* 추천 캐러셀 */}
           <hr />
           <br />
           <h2>

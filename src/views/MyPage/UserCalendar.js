@@ -59,7 +59,7 @@ function UserCalendar(props) {
           initialView="dayGridMonth"
           eventContent={renderEventContent}
           events={event}
-          contentHeight={"800px"}
+          contentHeight={"900px"}
           windowResize={true}
           locale={"ko"}
           fixedWeekCount={false}

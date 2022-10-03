@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+    $(document).ready(function(){
+
+        var roomName = [[${room.name}]];
+        var roomId = [[${room.id}]];
+        var username = [[${user}]];
+        var acToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6IlJPTEVfVVNFUiIsImV4cCI6MTY2NTIxNjI2NH0.4kex8Yx0owlTYdETE1oGMlcqHdklqOkoYMySZaA5YkY"
+
+        console.log(roomName + ", " + roomId + ", " + username);
+
+        var sockJs = new SockJS("/ws");
+        //1. SockJS를 내부에 들고있는 stomp를 내어줌
+        var stomp = Stomp.over(sockJs);
+
+        //2. connection이 맺어지면 실행
+        stomp.connect(
+            { Authorization : `Bearer ${acToken}`, "roomId" : roomId }, function (){
+            console.log("STOMP Connection")
+
+            //4. subscribe(path, callback)으로 메세지를 받을 수 있음
+            stomp.subscribe("/topic/room." + roomId, function (chat) {    // binding key 설정(구독할 때)
+                var content = JSON.parse(chat.body);
+                var writer = content.sender;
+                var message = content.data;
+                var str = '';
+
+                if(writer === username){
+                    str = "<div class='col-6'>";
+                    str += "<div class='alert alert-secondary'>";
+                    str += "<b>" + writer + " : " + message + "</b>";
+                    str += "</div></div>";
+                    $("#msgArea").append(str);
+                }else{
+                    str = "<div class='col-6'>";
+                    str += "<div class='alert alert-warning'>";
+                    str += "<sb>" + writer + " : " + message + "</sb>";
+                    str += "</div></div>";
+                    $("#msgArea").append(str);
+                }
+            });
+
+            $.ajax({
+                url : "/api/v1/chat/1",
+                type : "get",
+                dataType : "json",
+                beforeSend : function (xhr) {
+                    xhr.setRequestHeader("Authorization", `Bearer ${acToken}`)
+                },
+                success: function(response) {
+                    var temp = JSON.stringify(response.result.messageList);
+                    var content = JSON.parse(temp);
+                    var t = content.contents;
+                    var str1 = '';
+                    console.log(t);
+                    if(t.length === 0){ // 이미 입장했는데 새로운 데이터가 0 인 경우는..?
+                        stomp.send('/pub/chat.enter.' + roomId, {}, JSON.stringify({type:"JOIN"}));
+                    }else{
+                        for(var i = 0; i <= t.length ; i++){
+                            var a = JSON.parse(JSON.stringify(t[i]));
+                            str1 = "<div class='col-6'>";
+                            str1 += "<div class='alert alert-secondary'>";
+                            str1 += "<b>" + a.sender + " : " + a.data + "</b>";
+                            str1 += "</div></div>";
+                            $("#msgArea").append(str1);
+                        }
+                    }
+                },
+                error: function(xhr) {
+                    console.log("[requestPostBodyJson] : [error] : " + JSON.stringify(xhr));
+                }
+            })
+        });
+
+        $("#button-send").on("click", function(e){
+            var msg = document.getElementById("msg");
+
+            console.log(username + ":" + msg.value);
+            stomp.send('/pub/chat.message.'+ roomId, {}, JSON.stringify({ data: msg.value, type:"CHAT"}));
+            msg.value = '';
+        });
+
+        $("#button-leave").on("click", function(e){
+            $.ajax({
+                url : "/api/v1/chat/1",
+                type : "delete",
+                dataType : "json",
+                beforeSend : function (xhr) {
+                    xhr.setRequestHeader("Authorization", `Bearer ${acToken}`)
+                },
+                success: function(response) {
+                    stomp.disconnect(function(frame) {
+                        console.log("stomp client successfully disconnected");
+                    });
+                },
+                error: function(xhr) {
+                    console.log("[requestPostBodyJson] : [error] : " + JSON.stringify(xhr));
+                }
+            });
+        });
+    });
+    /*]]>*/
+  </script>
+
+  <body>
+    <div class="container">
+      <div class="col-6">
+        <h1>[[${room.name}]]</h1>
+      </div>
+      <div>
+        <div id="msgArea" class="col"></div>
+        <div class="col-6">
+          <div class="input-group mb-3">
+            <input type="text" id="msg" class="form-control" />
+            <div class="input-group-append">
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                id="button-send"
+              >
+                전송
+              </button>
+            </div>
+          </div>
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            id="button-leave"
+          >
+            나가기
+          </button>
+        </div>
+      </div>
+      <div class="col-6"></div>
+    </div>
+  </body>
+</html>

@@ -58,7 +58,10 @@ function MyPage() {
               className="info"
               style={{ boxShadow: "2px 2px 2px 2px #ddd" }}
             >
-              <img src={data.imgUrl} style={{ borderRadius: "70%" }} />
+              <img
+                src={data.imgUrl}
+                style={{ borderRadius: "70%", marginBottom: "10px" }}
+              />
               <h2>{data.username}</h2>
               <h1>{data.email}</h1>
               {/* <h1>{data.phoneNumber}</h1> */}

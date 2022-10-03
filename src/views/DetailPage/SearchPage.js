@@ -75,6 +75,7 @@ const SearchPage = () => {
                   <Col
                     span={8}
                     style={{ marginRight: "-200px", marginTop: "20px" }}
+                    key={culture.cultureId}
                   >
                     <Link
                       to={`/detail/${culture.cultureId}`}
@@ -99,12 +100,13 @@ const SearchPage = () => {
               </Row>
             </div>
           ) : (
-            <div style={{ marginTop: "200px" }}>
+            <div style={{ marginTop: "200px", marginBottom: "200px" }}>
               <h2>검색 결과가 없습니다.</h2>
             </div>
           )}
         </center>
       </div>
+      <Footer />
     </>
   );
 };

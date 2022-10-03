@@ -19,6 +19,8 @@ import UserPage from "./views/MyPage/UserPage";
 import SearchPage from "./views/DetailPage/SearchPage";
 import Kakao from "./views/LoginPage/Kakao";
 
+import ChatPage from "./views/ChatPage/ChatPage";
+
 import "antd/dist/antd.css";
 import "./App.css";
 import MyReview from "./views/ReviewPage/MyReview";
@@ -45,6 +47,7 @@ function App() {
           <Route path="/userpage/:id" element={<UserPage />} />
           <Route path="/search/:inputValue" element={<SearchPage />} />
           <Route path="/oauth/redirect" element={<Kakao />} />
+          <Route path="/chat" element={<ChatPage />} />
 
           <Route path="/myreview" element={<MyReview />} />
         </Routes>
