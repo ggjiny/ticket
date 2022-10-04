@@ -6,6 +6,7 @@ import Header from "../Header/Header";
 import axios from "axios";
 import useDidMountEffect from "./useDidMountEffect";
 import Footer from "../Footer/Footer";
+import ReviewModify from "./ReviewModify";
 
 function Home() {
   const acToken = sessionStorage.getItem("accesstoken");
@@ -108,7 +109,11 @@ function Home() {
 
   async function deleteReview() {
     await axios
-      .delete(deleteUrl)
+      .delete(deleteUrl, {
+        headers: {
+          Authorization: `Bearer ${acToken}`,
+        },
+      })
       .then((response) => {
         if (
           response.data.result !== "undefined" &&
@@ -127,10 +132,10 @@ function Home() {
   const reivewDelete = (re) => {
     if (window.confirm("리뷰를 삭제하시겠습니까?")) {
       deleteUrl = deleteUrl + re;
-      console.log(deleteUrl);
       deleteReview();
     }
   };
+
   return (
     <div style={{ marginBottom: "100px" }}>
       <Header />
@@ -204,7 +209,21 @@ function Home() {
               />
               {item.memberId === data.userId ? (
                 <div className="reviewED">
-                  {/* <button>수정</button> */}
+                  <Link
+                    to={"./modify"}
+                    state={{
+                      hallId: hallId,
+                      contents: item.contents,
+                      floor: item.floor,
+                      part: item.part,
+                      record: item.record,
+                      number: item.number,
+                      starPoint: item.starPoin,
+                      reviewId: item.reviewId,
+                    }}
+                  >
+                    <button>수정</button>
+                  </Link>
                   <button onClick={() => reivewDelete(item.reviewId)}>
                     삭제
                   </button>

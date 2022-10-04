@@ -61,7 +61,13 @@ function UserReview(props) {
           ))}
         </div>
       ) : (
-        <div style={{ margin: "0 auto", width: "fit-content" }}>
+        <div
+          style={{
+            margin: "0 auto",
+            width: "fit-content",
+            height: "fit-content",
+          }}
+        >
           <h1>등록된 리뷰가 없습니다.</h1>
         </div>
       )}

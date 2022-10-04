@@ -24,6 +24,7 @@ import ChatPage from "./views/ChatPage/ChatPage";
 import "antd/dist/antd.css";
 import "./App.css";
 import MyReview from "./views/ReviewPage/MyReview";
+import ReviewModify from "./views/ReviewPage/ReviewModify";
 
 function App() {
   const store = createStore(rootReducer);
@@ -35,19 +36,19 @@ function App() {
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/detail/:showId" element={<DetailPage />} />
-          {/* <Route path="/login" element={<LoginPage />} /> */}
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/interwork" element={<InterworkPage />} />
           <Route path="/external/:siteName" element={<ExternalPage />} />
-          <Route path="/review" element={<ReviewHome />} />
+          <Route path="/review/:hallId" element={<ReviewHome />} />
           <Route path="/parts" element={<PartsHome />} />
-          <Route path="/review/register" element={<ReviewRegister />} />
+          <Route path="/review/:hallId/register" element={<ReviewRegister />} />
+          <Route path="/review/:hallId/modify" element={<ReviewModify />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/userpage/:id" element={<UserPage />} />
           <Route path="/search/:inputValue" element={<SearchPage />} />
           <Route path="/oauth/redirect" element={<Kakao />} />
-          <Route path="/chat" element={<ChatPage />} />
+          <Route path="/chat/:partId" element={<ChatPage />} />
 
           <Route path="/myreview" element={<MyReview />} />
         </Routes>

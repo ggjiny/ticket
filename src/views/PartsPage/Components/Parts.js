@@ -3,7 +3,8 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Dropdown, Menu, Space } from "antd";
 import { UserOutlined, CrownOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import useDidMountEffect from "../../MyPage/useDidMountEffect";
 
 function Parts({
   managerId,
@@ -23,7 +24,8 @@ function Parts({
   const [members, setMembers] = useState([]);
   const [date, setDate] = useState("");
   const [cdate, setCdate] = useState("");
-  //const [partCss, setPartCss] = useState("parts");
+  const [roomId, setRoomId] = useState("");
+  const navigate = useNavigate();
   let partCss = "parts";
   const acToken = sessionStorage.getItem("accesstoken");
 
@@ -50,9 +52,14 @@ function Parts({
 
   useEffect(() => {
     getMembers();
+    postPartsId();
   }, []);
+  //useDidMountEffect(() => {
+  // postPartsId();
+  //}, []);
+
+  //모집현황
   async function getMembers() {
-    //모집현황
     await axios
       .get(baseUrl + "member", {
         headers: {
@@ -73,8 +80,9 @@ function Parts({
         alert(error.response.data.errorMessage);
       }); //실패했을 때
   }
+
+  //참여하기
   async function joinParts() {
-    //참여하기
     await axios
       .post(baseUrl + "join", "", {
         headers: {
@@ -88,14 +96,16 @@ function Parts({
         ) {
           alert(response.data.message);
           getParts();
+          getMembers();
         }
       })
       .catch((error) => {
         alert(error.response.data.errorMessage);
       }); //실패했을 때
   }
+
+  //마감하기
   async function closeParts() {
-    //마감하기
     await axios
       .patch(secondUrl + "close", "", {
         headers: {
@@ -115,8 +125,9 @@ function Parts({
         alert(error.response.data.errorMessage);
       }); //실패했을 때
   }
+
+  //나가기
   async function leaveParts() {
-    //나가기
     await axios
       .delete(secondUrl + "leave", {
         headers: {
@@ -130,6 +141,7 @@ function Parts({
         ) {
           alert(response.data.message);
           getParts();
+          getMembers();
         }
       })
       .catch((error) => {
@@ -158,7 +170,30 @@ function Parts({
         alert(error.response.data.errorMessage);
       }); //실패했을 때
   }
-
+  //get roomId
+  async function postPartsId() {
+    await axios
+      .post(
+        "/api/v1/chat",
+        { roomName: partName, partsId: partId },
+        {
+          headers: {
+            Authorization: `Bearer ${acToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        if (
+          response.data.result !== "undefined" &&
+          response.data.result !== null
+        ) {
+          setRoomId(response.data.result.roomId);
+        }
+      })
+      .catch((error) => {
+        alert(error.response.data.errorMessage);
+      }); //실패했을 때
+  }
   const menu = //모집인원
     (
       <Menu>
@@ -249,6 +284,9 @@ function Parts({
             <button
               id="chatroom"
               style={{ width: "120px", marginLeft: "30px" }}
+              onClick={() =>
+                navigate(`/chat/${roomId}`, { state: { roomId: roomId } })
+              }
             >
               채팅방
             </button>
@@ -262,7 +300,14 @@ function Parts({
         <>
           {status === "ACTIVE" ? (
             <>
-              <button id="chatroom">채팅방</button>
+              <button
+                id="chatroom"
+                onClick={() =>
+                  navigate(`/chat/${roomId}`, { state: { roomId: roomId } })
+                }
+              >
+                채팅방
+              </button>
               <button
                 id="leaveparts"
                 onClick={() =>
@@ -276,6 +321,9 @@ function Parts({
             <button
               id="chatroom"
               style={{ width: "120px", marginLeft: "30px" }}
+              onClick={() =>
+                navigate(`/chat/${roomId}`, { state: { roomId: roomId } })
+              }
             >
               채팅방
             </button>

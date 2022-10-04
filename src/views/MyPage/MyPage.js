@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import Calendar from "./Calendar";
 import Header from "../Header/Header";
 import axios from "axios";
+import { FormOutlined } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router";
 import "./MyPage.css";
 import MyReview from "../ReviewPage/MyReview";
 import MyPartsList from "../PartsPage/MyPartsList";
 import Footer from "../Footer/Footer";
+import { Link } from "react-router-dom";
 const acToken = sessionStorage.getItem("accesstoken");
 
 function MyPage() {
@@ -63,7 +65,16 @@ function MyPage() {
                 style={{ borderRadius: "70%", marginBottom: "10px" }}
               />
               <h2>{data.username}</h2>
+
               <h1>{data.email}</h1>
+
+              <button
+                style={{ border: "0px" }}
+                onClick={() => console.log("hii")}
+              >
+                개인정보 수정📝
+              </button>
+
               {/* <h1>{data.phoneNumber}</h1> */}
             </section>
             <section

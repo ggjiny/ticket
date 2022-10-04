@@ -131,7 +131,9 @@ const DetailPage = () => {
           width: "180px",
         }}
         onClick={() =>
-          navigate("/review", { state: { hallId: data.hallName } })
+          navigate("/review/" + data.hallName, {
+            state: { hallId: data.hallName },
+          })
         }
       >
         후기

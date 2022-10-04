@@ -221,8 +221,11 @@ const MainPage = () => {
         </div>
       ) : (
         <div style={{ marginLeft: "500px", marginTop: "30px" }}>
-          <h1>로그인이 필요한 서비스입니다.</h1>
-          <a href={KAKAO_AUTH_URL}> → 로그인하러 가기</a>
+          <h1>🔒 로그인이 필요한 서비스입니다.</h1>
+          <a href={KAKAO_AUTH_URL} style={{ fontSize: "20px" }}>
+            {" "}
+            → 로그인하러 가기
+          </a>
         </div>
       )}
       <Footer />

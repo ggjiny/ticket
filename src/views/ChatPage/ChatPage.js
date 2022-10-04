@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useMemo,
   Fragment,
+  useRef,
 } from "react";
 import Header from "../Header/Header";
 
@@ -11,7 +12,7 @@ import "./Chat.css";
 import axios from "axios";
 
 import SockJs from "sockjs-client";
-import Stomp from "stompjs";
+import * as StompJs from "@stomp/stompjs";
 import { Space } from "antd";
 import {
   SendOutlined,
@@ -29,6 +30,8 @@ import {
   SideBar,
   ChatList,
 } from "react-chat-elements";
+import { connect } from "react-redux";
+import { useLocation } from "react-router-dom";
 
 const ChatPage = () => {
   const [chatList, setChatList] = useState([]);
@@ -46,20 +49,23 @@ const ChatPage = () => {
   const [newDate, setNewDate] = useState([]);
   const [sender, setSender] = useState([]);
   const [text, setText] = useState("");
+  const client = useRef({});
+  const [chbody, setChbody] = useState({});
 
-  let caro = <div></div>;
-  let str = <div></div>;
-  let str1 = <div></div>;
-  const sockJs = new SockJs("http://3.38.7.238:8080/ws");
-  const stomp = Stomp.over(sockJs);
+  const [disabled, setDisabled] = useState(false);
+
+  let NewMsg = <div></div>;
+  let BeforeMsg = <div></div>;
+  // const sockJs = new SockJs("http://3.38.7.238:8080/ws");
+  // const client = StompJs.over(sockJs);
 
   const acToken = sessionStorage.getItem("accesstoken");
   const baseUrl = "/api/v1/member";
-  const roomId = "1";
-  const SName = "semi";
+
+  const location = useLocation();
+  const roomId = location.state.roomId;
 
   const getMember = () => {
-    //사용자 이름 받기
     axios
       .get(baseUrl, {
         headers: {
@@ -75,136 +81,223 @@ const ChatPage = () => {
       });
   };
 
-  const Info = () => {
-    //채팅 목록 받기
-    axios
-      .get("/api/v1/chat/1/", {
+  async function Info() {
+    await axios
+      .get(`/api/v1/chat/${roomId}`, {
         headers: {
           Authorization: `Bearer ${acToken}`,
         },
       })
       .then((res) => {
-        //setRoomId(res.data.result.roomId);//setRoomId
-        setRoomName(res.data.result.roomName); //setRoomName
-        setMessageList(res.data.result.messageList); //setMessageList
-        setWriter(res.data.result.messageList.contents.sender); //setWirter
+        setRoomName(res.data.result.roomName);
+        setMessageList(res.data.result.messageList.contents);
+        setRMessageList(messageList.reverse());
         const temp = JSON.stringify(res.data.result.messageList);
         const contents = JSON.parse(temp);
-        console.log(res.data.result.messageList);
+        console.log(roomId);
+        console.log(messageList);
 
-        /* if (contents.length === 0) {
-
-          stomp.send(
-            "/pub/chat.enter." + roomId,
-            {},
-            JSON.stringify({ type: "JOIN" })
-          );
+        console.log(contents.contents.type);
+        if (contents.contents.length === 0) {
+          //입장 메시지 보내기
+          client.current.publish({
+            destination: "/pub/chat.enter." + roomId,
+            body: JSON.stringify({ type: "JOIN", sender: userName }),
+          });
         } else {
-
           for (var i = 0; i < contents.length; i++) {
             const arrs = JSON.parse(JSON.stringify(contents[i]));
-            setNewDate(arrs.date);
-
+            console.log(arrs.data);
           }
-        }*/
+        }
       })
       .catch((error) => {
         console.log("실패");
         console.log(error);
       });
+  }
+
+  useEffect(() => {
+    connect();
+    getMember();
+
+    return () => disconnect();
+  }, []);
+
+  const connect = () => {
+    client.current = new StompJs.Client({
+      //brokerURL: "http://3.38.7.238:8080/ws", // 웹소켓 서버로 직접 접속
+      webSocketFactory: () => new SockJs("http://3.38.7.238:8080/ws"), // proxy를 통한 접속
+      connectHeaders: {
+        Authorization: `Bearer ${acToken}`,
+        roomId,
+      },
+      debug: function (str) {
+        //console.log(str);
+      },
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+
+      onConnect: () => {
+        Info();
+
+        subscribe();
+        console.log("연결ㄹㄹ");
+      },
+      onStompError: (frame) => {
+        console.error(frame);
+      },
+    });
+    client.current.activate();
   };
-  const Subscribe = () => {
-    //구독하기
-    stomp.subscribe(`/topic/room.` + roomId, function (response) {
-      console.log("chat:" + response);
-      console.log(JSON.parse(response.body));
-      // const json_body = JSON.parse(chat.body);
-      //setWriter(json_body.sender);
-      //setChatList([...chatList, json_body]);
+
+  const disconnect = () => {
+    client.current.deactivate();
+  };
+
+  const subscribe = () => {
+    client.current.subscribe(`/topic/room.` + roomId, (chat) => {
+      setChatList((chatList) => [...chatList, JSON.parse(chat.body)]);
+      var content = JSON.parse(chat.body);
+
+      console.log(chatList);
     });
   };
 
-  const Connect = () => {
-    //연결하기
-
-    stomp.connect(
-      { Authorization: `Bearer ${acToken}`, roomId },
-      function (frame) {
-        console.log("connected: " + frame);
-        Subscribe();
-        // if (userName && text)
-        //   stomp.send(
-        //     "/pub/chat.message." + roomId,
-        //     {},
-        //     JSON.stringify({ sender: userName, data: text, type: "CHAT" })
-        //   );
-      }
-    );
-  };
-
-  useEffect(() => {
-    Connect();
-    getMember();
-    Info();
-  }, []);
-
-  const SendMessage = (e) => {
-    //메시지 보내기
+  const publish = async (e) => {
+    setDisabled(true);
     e.preventDefault();
-    console.log(text);
-    if (userName && text)
-      stomp.send(
-        "/pub/chat.message." + roomId,
-        {},
-        JSON.stringify({ sender: userName, data: text, type: "CHAT" })
-      );
+    if (!client.current.connected) {
+      return;
+    }
+
+    await new Promise((r) => setTimeout(r, 800)); //1초 지연시킴
+    client.current.publish({
+      destination: "/pub/chat.message." + roomId,
+      body: JSON.stringify({ sender: userName, data: text, type: "CHAT" }),
+    });
+
     setText("");
+    setDisabled(false);
   };
 
+  const onInfo = (e) => {
+    Info();
+  };
   const onChangeMsg = (e) => {
+    e.preventDefault();
     setText(e.target.value);
   };
 
-  // const onInfo = (e) => {
-  //   Info();
-  // };
-
-  str = (
+  console.log(chatList);
+  NewMsg = (
     <div>
-      {chatList.map((ch, idx) => (
-        <MessageBox
-          position={"right"}
-          type={"text"}
-          text={ch.data}
-          title={writer}
-        />
-      ))}
+      {chatList.map((ch, idx) =>
+        ch.type === "CHAT" ? (
+          ch.sender === userName ? (
+            <MessageBox
+              key={ch.createdAt}
+              position={"right"}
+              type={"text"}
+              text={ch.data}
+              title={ch.sender}
+            />
+          ) : (
+            <MessageBox
+              position={"left"}
+              type={"text"}
+              text={ch.data}
+              title={ch.sender}
+            />
+          )
+        ) : (
+          <SystemMessage text={ch.data} />
+        )
+      )}
     </div>
   );
 
+  BeforeMsg = (
+    <div>
+      {RMessageList.map((ml) =>
+        ml.type === "CHAT" ? (
+          ml.sender === userName ? (
+            <MessageBox
+              position={"right"}
+              type={"text"}
+              text={ml.data}
+              title={ml.sender}
+            />
+          ) : (
+            <MessageBox
+              position={"left"}
+              type={"text"}
+              text={ml.data}
+              title={ml.sender}
+              date
+            />
+          )
+        ) : (
+          <SystemMessage text={ml.data} />
+        )
+      )}
+    </div>
+  );
   return (
-    <>
+    <div
+      style={{
+        marginRight: "500px",
+        marginLeft: "500px",
+        paddingBottom: "70px",
+      }}
+    >
+      <Button onClick={onInfo}></Button>
       <h1>{content.sender}</h1>
-      {/* <Button onClick={onInfo} /> */}
       <Navbar
-        left={<div>{roomName} </div>}
-        center={<div>{userName}님 환영합니다.</div>}
+        left={
+          <div>
+            <p
+              style={{
+                fontWeight: "bold",
+                marginTop: "20px",
+                color: "navy",
+                fontSize: "17px",
+              }}
+            >
+              {roomName}
+            </p>
+          </div>
+        }
+        // center={<div>{userName}님 환영합니다.</div>}
         right={<div></div>}
       />
       <br />
-      <div>{str}</div>
-      <form onSubmit={SendMessage}>
+      <div>
+        {BeforeMsg}
+        {NewMsg}
+      </div>
+
+      <form
+        onSubmit={publish}
+        style={{
+          position: "fixed",
+          bottom: "0",
+          width: "100vw",
+        }}
+      >
         <input
-          referance={inputReferance}
           placeholder="메시지를 입력하세요!"
-          //multiline={true}
           onChange={onChangeMsg}
-          //autofocus={true}
+          type="text"
           value={text}
-        ></input>
-        <button type="submit">보내기</button>
+          style={{ width: "45vw", fontSize: "16px", height: "60px" }}
+        />
+        <button type="submit" style={{ height: "60px" }} disabled={disabled}>
+          전송
+        </button>
       </form>
-    </>
+    </div>
   );
 };
 export default ChatPage;

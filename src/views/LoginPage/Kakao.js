@@ -11,7 +11,7 @@ import { ConsoleSqlOutlined } from "@ant-design/icons";
 import { Scale } from "@mui/icons-material";
 import Footer from "../Footer/Footer";
 
-const Kakao = (props) => {
+const Kakao = () => {
   const [nickname, setNickname] = useState("");
   const [phone, setPhone] = useState("");
   const [value, setValue] = useState("");

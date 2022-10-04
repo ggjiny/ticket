@@ -37,10 +37,9 @@ function PartsList(props) {
           response.data.result !== null
         )
           setParts(response.data.result);
-        console.log(response.data.result);
       })
       .catch((error) => {
-        console.log(error.response.data.errorMessage);
+        alert(error.response.data.errorMessage);
       }); //실패했을 때
   }
 
