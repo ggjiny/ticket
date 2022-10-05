@@ -17,6 +17,7 @@ const Footer = () => {
       <p>
         <span>2022 상명대학교 컴퓨터과학과 캡스톤디자인</span>
         <br />
+        <span>강아지예영</span>
         <span>FrontEnd: 김예진, 최아름</span>
         <span>BackEnd: 강세미, 나영현, 임지민</span>
       </p>

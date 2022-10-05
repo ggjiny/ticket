@@ -114,7 +114,7 @@ function MyPage() {
                 티켓 연동
               </button>
               <button className="buttons" onClick={() => handleModal2()}>
-                팟 모집 목록
+                팟 참여 목록
               </button>
               <MyPartsList
                 open={modalOpen2}

@@ -202,6 +202,7 @@ const ChatPage = () => {
               type={"text"}
               text={ch.data}
               title={ch.sender}
+              date
             />
           ) : (
             <MessageBox
@@ -209,6 +210,7 @@ const ChatPage = () => {
               type={"text"}
               text={ch.data}
               title={ch.sender}
+              date
             />
           )
         ) : (
@@ -228,6 +230,7 @@ const ChatPage = () => {
               type={"text"}
               text={ml.data}
               title={ml.sender}
+              date
             />
           ) : (
             <MessageBox
@@ -252,7 +255,6 @@ const ChatPage = () => {
         paddingBottom: "70px",
       }}
     >
-      <Button onClick={onInfo}></Button>
       <h1>{content.sender}</h1>
       <Navbar
         left={

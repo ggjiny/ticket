@@ -218,7 +218,7 @@ function Home() {
                       part: item.part,
                       record: item.record,
                       number: item.number,
-                      starPoint: item.starPoin,
+                      starPoint: item.starPoint,
                       reviewId: item.reviewId,
                     }}
                   >
@@ -242,7 +242,7 @@ function Home() {
         id="reviewRegister"
         onClick={() => navigate("./register", { state: { hallId: hallId } })}
       >
-        등록하기
+        작성하기
       </button>
       <Footer />
     </div>
