@@ -47,7 +47,7 @@ function App() {
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/userpage/:id" element={<UserPage />} />
           <Route path="/search/:inputValue" element={<SearchPage />} />
-          <Route path="./oauth/redirect" element={<Kakao />} />
+          <Route path="/oauth/redirect" element={<Kakao />} />
           <Route path="/chat/:partId" element={<ChatPage />} />
 
           <Route path="/myreview" element={<MyReview />} />
